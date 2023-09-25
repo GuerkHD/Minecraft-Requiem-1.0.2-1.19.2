@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "#": {
+      "item": "minecraft:nether_star"
+    },
+    "X": {
+      "item": "minecraftrequiem:edible_gold_block"
+    }
+  },
+  "pattern": [
+    " X ",
+    "X#X",
+    "XXX"
+  ],
+  "result": {
+    "item": "minecraftrequiem:stand_arrow_tip"
+  }
+}

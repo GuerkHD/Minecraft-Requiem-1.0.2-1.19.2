@@ -1,0 +1,18 @@
+{
+  "item.minecraftrequiem.guerk_ingot": "Guerk Ingot",
+  "item.minecraftrequiem.raw_guerk": "Raw Guerk",
+  "item.minecraftrequiem.stand_arrow": "Stand Arrow",
+  "item.minecraftrequiem.requiem_arrow": "Requiem Arrow",
+  "item.minecraftrequiem.stand_arrow_tip": "Stand Arrow Tip",
+  "item.minecraftrequiem.requiem_arrow_tip": "Requiem Arrow Tip",
+
+  "block.minecraftrequiem.guerk_block": "Block of Guerk",
+  "block.minecraftrequiem.guerk_ore": "Guerk Ore",
+  "block.minecraftrequiem.deepslate_guerk_ore": "Deepslate Guerk Ore",
+  "block.minecraftrequiem.edible_gold_block": "Edible Block of Gold",
+
+  "key.category.minecraftrequiem.stand": "Minecraft Requiem",
+  "key.minecraftrequiem.summon_stand": "Summon Stand",
+
+  "itemGroup.minecraftrequiemtab": "Minecraft Requiem"
+}

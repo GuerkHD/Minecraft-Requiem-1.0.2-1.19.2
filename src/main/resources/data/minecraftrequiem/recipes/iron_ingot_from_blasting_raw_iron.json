@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 100,
+  "experience": 0.7,
+  "group": "guerk_ingot",
+  "ingredient": {
+    "item": "minecraftrequiem:raw_guerk"
+  },
+  "result": "minecraftrequiem:guerk_ingot"
+}

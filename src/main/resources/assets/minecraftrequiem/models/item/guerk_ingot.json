@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "minecraftrequiem:item/guerk_ingot"
+  }
+}

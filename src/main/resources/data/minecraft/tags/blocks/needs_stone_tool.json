@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraftrequiem:guerk_block",
+    "minecraftrequiem:guerk_ore",
+    "minecraftrequiem:deepslate_guerk_ore",
+    "minecraftrequiem:edible_gold_block"
+  ]
+}

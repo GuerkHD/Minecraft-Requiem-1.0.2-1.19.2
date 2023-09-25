@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "#": {
+      "item": "minecraftrequiem:guerk_ingot"
+    },
+    "X": {
+      "item": "minecraft:gold_block"
+    }
+  },
+  "pattern": [
+    "###",
+    "#X#",
+    "###"
+  ],
+  "result": {
+    "item": "minecraftrequiem:edible_gold_block"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "minecraftrequiem:block/deepslate_guerk_ore"
+  }
+}

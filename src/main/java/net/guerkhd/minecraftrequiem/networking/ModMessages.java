@@ -1,6 +1,8 @@
 package net.guerkhd.minecraftrequiem.networking;
 
 import net.guerkhd.minecraftrequiem.MinecraftRequiem;
+import net.guerkhd.minecraftrequiem.networking.packet.ArrowC2SPacket;
+import net.guerkhd.minecraftrequiem.networking.packet.StandActiveDataSyncS2CPacket;
 import net.guerkhd.minecraftrequiem.networking.packet.StandC2SPacket;
 import net.guerkhd.minecraftrequiem.networking.packet.StandUserDataSyncS2CPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -37,11 +39,21 @@ public class ModMessages
                 .encoder(StandC2SPacket::toBytes)
                 .consumerMainThread(StandC2SPacket::handle)
                 .add();
+        net.messageBuilder(ArrowC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(ArrowC2SPacket::new)
+                .encoder(ArrowC2SPacket::toBytes)
+                .consumerMainThread(ArrowC2SPacket::handle)
+                .add();
 
         net.messageBuilder(StandUserDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(StandUserDataSyncS2CPacket::new)
                 .encoder(StandUserDataSyncS2CPacket::toBytes)
                 .consumerMainThread(StandUserDataSyncS2CPacket::handle)
+                .add();
+        net.messageBuilder(StandActiveDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(StandActiveDataSyncS2CPacket::new)
+                .encoder(StandActiveDataSyncS2CPacket::toBytes)
+                .consumerMainThread(StandActiveDataSyncS2CPacket::handle)
                 .add();
     }
 

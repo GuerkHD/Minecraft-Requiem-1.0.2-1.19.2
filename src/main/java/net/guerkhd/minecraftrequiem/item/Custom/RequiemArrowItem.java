@@ -1,5 +1,8 @@
 package net.guerkhd.minecraftrequiem.item.Custom;
 
+import net.guerkhd.minecraftrequiem.client.ClientStandData;
+import net.guerkhd.minecraftrequiem.networking.ModMessages;
+import net.guerkhd.minecraftrequiem.networking.packet.ArrowC2SPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -19,18 +22,13 @@ public class RequiemArrowItem extends Item
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
 
-        if(!level.isClientSide && hand == InteractionHand.MAIN_HAND)
+        if(!level.isClientSide && hand == InteractionHand.MAIN_HAND && !ClientStandData.getStandUser())
         {
-            outputWIP(player);
+            ModMessages.sendToServer(new ArrowC2SPacket());
             player.getCooldowns().addCooldown(this, 20);
         }
 
         return super.use(level, player, hand);
-    }
-
-    private void outputWIP(Player player)
-    {
-        player.sendSystemMessage(Component.literal("Stands coming in a future Update."));
     }
 
     private int getRandomNumber()

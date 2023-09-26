@@ -2,6 +2,7 @@ package net.guerkhd.minecraftrequiem.networking;
 
 import net.guerkhd.minecraftrequiem.MinecraftRequiem;
 import net.guerkhd.minecraftrequiem.networking.packet.StandC2SPacket;
+import net.guerkhd.minecraftrequiem.networking.packet.StandUserDataSyncS2CPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -35,6 +36,12 @@ public class ModMessages
                 .decoder(StandC2SPacket::new)
                 .encoder(StandC2SPacket::toBytes)
                 .consumerMainThread(StandC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(StandUserDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(StandUserDataSyncS2CPacket::new)
+                .encoder(StandUserDataSyncS2CPacket::toBytes)
+                .consumerMainThread(StandUserDataSyncS2CPacket::handle)
                 .add();
     }
 

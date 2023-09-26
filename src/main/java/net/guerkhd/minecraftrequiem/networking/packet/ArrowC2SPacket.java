@@ -12,14 +12,14 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class StandC2SPacket
+public class ArrowC2SPacket
 {
-    public StandC2SPacket()
+    public ArrowC2SPacket()
     {
 
     }
 
-    public StandC2SPacket(FriendlyByteBuf buf)
+    public ArrowC2SPacket(FriendlyByteBuf buf)
     {
 
     }
@@ -37,39 +37,20 @@ public class StandC2SPacket
             ServerPlayer player = context.getSender();
             ServerLevel level = player.getLevel();
 
-            if(isStandUser(player) && !standIsActive(player))
+            if(!isStandUser(player))
             {
                 level.playSound(null
                         , player.getOnPos()
-                        , SoundEvents.CHEST_OPEN
+                        , SoundEvents.WITHER_DEATH
                         , SoundSource.PLAYERS
                         , 0.5f
                         , level.random.nextFloat() * 0.1f + 0.9f);
 
                 player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
                 {
-                    stand.activateStand();
-                    ModMessages.sendToPlayer(new StandActiveDataSyncS2CPacket(stand.getStandActive()), player);
+                    stand.makeStandUser();
+                    ModMessages.sendToPlayer(new StandUserDataSyncS2CPacket(stand.getStandUser()), player);
                 });
-            }
-            else if(isStandUser(player) && standIsActive(player))
-            {
-                level.playSound(null
-                        , player.getOnPos()
-                        , SoundEvents.CHEST_CLOSE
-                        , SoundSource.PLAYERS
-                        , 0.5f
-                        , level.random.nextFloat() * 0.1f + 0.9f);
-
-                player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
-                {
-                    stand.deactivateStand();
-                    ModMessages.sendToPlayer(new StandActiveDataSyncS2CPacket(stand.getStandActive()), player);
-                });
-            }
-            else
-            {
-                player.sendSystemMessage(Component.literal("Skill issue."));
             }
         });
         return true;

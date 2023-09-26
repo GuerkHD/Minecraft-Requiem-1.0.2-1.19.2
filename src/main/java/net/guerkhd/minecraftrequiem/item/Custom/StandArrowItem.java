@@ -1,6 +1,12 @@
 package net.guerkhd.minecraftrequiem.item.Custom;
 
+import net.guerkhd.minecraftrequiem.client.ClientStandData;
+import net.guerkhd.minecraftrequiem.networking.ModMessages;
+import net.guerkhd.minecraftrequiem.networking.packet.ArrowC2SPacket;
+import net.guerkhd.minecraftrequiem.networking.packet.StandC2SPacket;
+import net.guerkhd.minecraftrequiem.stand.PlayerStandProvider;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -20,11 +26,11 @@ public class StandArrowItem extends Item
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
 
-        if(!level.isClientSide && hand == InteractionHand.MAIN_HAND)
+        if(!level.isClientSide && hand == InteractionHand.MAIN_HAND && !ClientStandData.getStandUser())
         {
             if(player.experienceLevel >= 30)
             {
-                outputWIP(player);
+                ModMessages.sendToServer(new ArrowC2SPacket());
                 player.giveExperiencePoints(-1395);
             }
             else player.die(DamageSource.MAGIC);
@@ -33,11 +39,6 @@ public class StandArrowItem extends Item
         }
 
         return super.use(level, player, hand);
-    }
-
-    private void outputWIP(Player player)
-    {
-        player.sendSystemMessage(Component.literal("Stands coming in a future Update."));
     }
 
     private int getRandomNumber()

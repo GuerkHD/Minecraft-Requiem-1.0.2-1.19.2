@@ -3,6 +3,7 @@ package net.guerkhd.minecraftrequiem;
 import com.mojang.logging.LogUtils;
 import net.guerkhd.minecraftrequiem.block.ModBlocks;
 import net.guerkhd.minecraftrequiem.item.ModItems;
+import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.world.feature.ModConfiguredFeatures;
 import net.guerkhd.minecraftrequiem.world.feature.ModPlacedFeatures;
 import net.minecraftforge.api.distmarker.Dist;
@@ -25,8 +26,8 @@ public class MinecraftRequiem
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+        ModItems.register(modEventBus);
 
         ModConfiguredFeatures.register(modEventBus);
         ModPlacedFeatures.register(modEventBus);
@@ -38,7 +39,10 @@ public class MinecraftRequiem
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-
+        event.enqueueWork(() ->
+        {
+            ModMessages.register();
+        });
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent

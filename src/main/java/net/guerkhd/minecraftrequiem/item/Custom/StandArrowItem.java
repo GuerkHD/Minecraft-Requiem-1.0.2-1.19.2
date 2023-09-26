@@ -4,6 +4,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -21,8 +22,12 @@ public class StandArrowItem extends Item
 
         if(!level.isClientSide && hand == InteractionHand.MAIN_HAND)
         {
-            //if(getRandomNumber() == 0) outputWIP(player);
-            //else player.die(player.getName() + "was unworthy of a stand!");
+            if(player.experienceLevel >= 30)
+            {
+                outputWIP(player);
+                player.giveExperiencePoints(-1395);
+            }
+            else player.die(DamageSource.MAGIC);
 
             player.getCooldowns().addCooldown(this, 20);
         }

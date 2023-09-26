@@ -3,7 +3,11 @@ package net.guerkhd.minecraftrequiem.block;
 import net.guerkhd.minecraftrequiem.MinecraftRequiem;
 import net.guerkhd.minecraftrequiem.item.ModCreativeModeTab;
 import net.guerkhd.minecraftrequiem.item.ModItems;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -58,7 +62,41 @@ public class ModBlocks
 
     private static <T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block, CreativeModeTab tab)
     {
-        return ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties().tab(tab)));
+        Item.Properties edible = new Item.Properties();
+
+        if(name.equals("guerk_block")) edible.food(Foods.GUERK_BLOCK);
+        if(name.equals("guerk_ore")) edible.food(Foods.GUERK_ORE);
+        if(name.equals("deepslate_guerk_ore")) edible.food(Foods.DEEPSLATE_GUERK_ORE);
+        if(name.equals("edible_gold_block")) edible.food(Foods.EDIBLE_GOLD_BLOCK);
+
+        return ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), edible.tab(tab)));
+    }
+
+    public static class Foods
+    {
+        public static final FoodProperties GUERK_BLOCK = new FoodProperties.Builder()
+                .nutrition(20)
+                .saturationMod(2.4f)
+                .build();
+
+        public static final FoodProperties GUERK_ORE = new FoodProperties.Builder()
+                .nutrition(2)
+                .saturationMod(0.6f)
+                .effect(() -> new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 1), 1)
+                .build();
+
+        public static final FoodProperties DEEPSLATE_GUERK_ORE = new FoodProperties.Builder()
+                .nutrition(2)
+                .saturationMod(0.6f)
+                .effect(() -> new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 1), 1)
+                .build();
+
+        public static final FoodProperties EDIBLE_GOLD_BLOCK = new FoodProperties.Builder()
+                .nutrition(20)
+                .saturationMod(2.4f)
+                .alwaysEat()
+                .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, 1200, 0), 1)
+                .build();
     }
 
     public static void register(IEventBus eventBus)

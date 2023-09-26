@@ -1,9 +1,9 @@
 package net.guerkhd.minecraftrequiem.event;
 
 import net.guerkhd.minecraftrequiem.MinecraftRequiem;
+import net.guerkhd.minecraftrequiem.networking.ModMessages;
+import net.guerkhd.minecraftrequiem.networking.packet.StandC2SPacket;
 import net.guerkhd.minecraftrequiem.util.KeyBinding;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -20,7 +20,7 @@ public class ClientEvents
         {
             if(KeyBinding.SUMMONING_KEY.consumeClick())
             {
-                Minecraft.getInstance().player.sendSystemMessage(Component.literal("Test"));
+                ModMessages.sendToServer(new StandC2SPacket());
             }
         }
     }

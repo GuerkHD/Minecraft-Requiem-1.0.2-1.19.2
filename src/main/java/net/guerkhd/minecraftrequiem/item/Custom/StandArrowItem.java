@@ -40,9 +40,4 @@ public class StandArrowItem extends Item
 
         return super.use(level, player, hand);
     }
-
-    private int getRandomNumber()
-    {
-        return RandomSource.createNewThreadLocalInstance().nextInt(10);
-    }
 }

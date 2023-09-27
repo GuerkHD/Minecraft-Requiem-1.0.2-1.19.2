@@ -4,6 +4,9 @@ public class ClientStandData
 {
     private static boolean standUser;
     private static boolean standActive;
+    private static int standID;
+    //ID 1 = The World
+    //ID 2 = D4C
 
     public static boolean getStandUser()
     {
@@ -14,7 +17,6 @@ public class ClientStandData
         ClientStandData.standUser = standUser;
     }
 
-
     public static boolean getStandActive()
     {
         return standActive;
@@ -22,6 +24,15 @@ public class ClientStandData
     public static void setStandActive(boolean standActive)
     {
         ClientStandData.standActive = standActive;
+    }
+
+    public static int getStandID()
+    {
+        return standID;
+    }
+    public static void setStandID(int standID)
+    {
+        ClientStandData.standID = standID;
     }
 
 }

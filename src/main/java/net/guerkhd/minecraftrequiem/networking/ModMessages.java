@@ -41,6 +41,11 @@ public class ModMessages
                 .encoder(ArrowC2SPacket::toBytes)
                 .consumerMainThread(ArrowC2SPacket::handle)
                 .add();
+        net.messageBuilder(AbilityC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(AbilityC2SPacket::new)
+                .encoder(AbilityC2SPacket::toBytes)
+                .consumerMainThread(AbilityC2SPacket::handle)
+                .add();
 
         net.messageBuilder(StandUserDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(StandUserDataSyncS2CPacket::new)

@@ -3,6 +3,7 @@ package net.guerkhd.minecraftrequiem.event;
 import net.guerkhd.minecraftrequiem.MinecraftRequiem;
 import net.guerkhd.minecraftrequiem.client.ClientStandData;
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
+import net.guerkhd.minecraftrequiem.networking.packet.AbilityC2SPacket;
 import net.guerkhd.minecraftrequiem.networking.packet.StandC2SPacket;
 import net.guerkhd.minecraftrequiem.util.KeyBinding;
 import net.minecraft.client.Minecraft;
@@ -31,14 +32,7 @@ public class ClientEvents
             }
             else if(KeyBinding.ABILITY_KEY.consumeClick() && ClientStandData.getStandActive())
             {
-                if(ClientStandData.getStandID() == 0)
-                {
-                    Minecraft.getInstance().player.sendSystemMessage(Component.literal("Za Warudo!"));
-                }
-                else if(ClientStandData.getStandID() == 1)
-                {
-                    Minecraft.getInstance().player.sendSystemMessage(Component.literal("D4C!"));
-                }
+                ModMessages.sendToServer(new AbilityC2SPacket());
             }
         }
     }

@@ -7,6 +7,7 @@ public class ClientStandData
     private static int standID;
     //ID 1 = The World
     //ID 2 = D4C
+    //ID 3 = Magicians Red
 
     public static boolean getStandUser()
     {

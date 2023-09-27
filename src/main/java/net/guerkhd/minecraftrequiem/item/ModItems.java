@@ -3,6 +3,7 @@ package net.guerkhd.minecraftrequiem.item;
 import net.guerkhd.minecraftrequiem.MinecraftRequiem;
 import net.guerkhd.minecraftrequiem.item.Custom.RequiemArrowItem;
 import net.guerkhd.minecraftrequiem.item.Custom.StandArrowItem;
+import net.guerkhd.minecraftrequiem.item.Custom.StandRemoveArrowItem;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -43,6 +44,11 @@ public class ModItems
                     .tab(ModCreativeModeTab.MINECRAFTREQUIEM_TAB)));
     public static final RegistryObject<Item> REQUIEM_ARROW_TIP = ITEMS.register("requiem_arrow_tip",
             () -> new Item(new Item.Properties()
+                    .stacksTo(1)
+                    .fireResistant()
+                    .tab(ModCreativeModeTab.MINECRAFTREQUIEM_TAB)));
+    public static final RegistryObject<Item> REMOVER_ARROW = ITEMS.register("remover_arrow",
+            () -> new StandRemoveArrowItem(new Item.Properties()
                     .stacksTo(1)
                     .fireResistant()
                     .tab(ModCreativeModeTab.MINECRAFTREQUIEM_TAB)));

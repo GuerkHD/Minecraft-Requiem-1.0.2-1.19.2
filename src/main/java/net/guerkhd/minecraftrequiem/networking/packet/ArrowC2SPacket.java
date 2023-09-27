@@ -50,7 +50,7 @@ public class ArrowC2SPacket
                 player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
                 {
                     stand.makeStandUser();
-                    stand.setStandID(RandomSource.createNewThreadLocalInstance().nextInt(2));
+                    stand.setStandID(RandomSource.createNewThreadLocalInstance().nextInt(3));
                     ModMessages.sendToPlayer(new StandUserDataSyncS2CPacket(stand.getStandUser()), player);
                     ModMessages.sendToPlayer(new StandIDDataSyncS2CPacket(stand.getStandID()), player);
                     player.sendSystemMessage(Component.literal("StandID = " + stand.getStandID()));

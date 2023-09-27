@@ -8,20 +8,20 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class StandC2SPacket
+public class RemoverC2SPacket
 {
-    public StandC2SPacket()
+    public RemoverC2SPacket()
     {
 
     }
 
-    public StandC2SPacket(FriendlyByteBuf buf)
+    public RemoverC2SPacket(FriendlyByteBuf buf)
     {
 
     }
@@ -39,41 +39,27 @@ public class StandC2SPacket
             ServerPlayer player = context.getSender();
             ServerLevel level = player.getLevel();
 
-            if(isStandUser(player) && !standIsActive(player))
+            if(isStandUser(player))
             {
                 level.playSound(null
                         , player.getOnPos()
-                        , SoundEvents.CHEST_OPEN
+                        , SoundEvents.WITHER_SPAWN
                         , SoundSource.PLAYERS
                         , 0.5f
                         , level.random.nextFloat() * 0.1f + 0.9f);
 
                 player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
                 {
-                    stand.activateStand();
-                    if(stand.getStandID() == 2) player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 36000, 0));
-                    ModMessages.sendToPlayer(new StandActiveDataSyncS2CPacket(stand.getStandActive()), player);
+                    if(stand.getStandActive())
+                    {
+                        if(stand.getStandID() == 2) player.removeEffect(MobEffects.FIRE_RESISTANCE);
+                        stand.deactivateStand();
+                        ModMessages.sendToPlayer(new StandActiveDataSyncS2CPacket(stand.getStandActive()), player);
+                    }
+                    stand.undoStandUser();
+                    ModMessages.sendToPlayer(new StandUserDataSyncS2CPacket(stand.getStandUser()), player);
+                    player.sendSystemMessage(Component.literal("Stand removed."));
                 });
-            }
-            else if(isStandUser(player) && standIsActive(player))
-            {
-                level.playSound(null
-                        , player.getOnPos()
-                        , SoundEvents.CHEST_CLOSE
-                        , SoundSource.PLAYERS
-                        , 0.5f
-                        , level.random.nextFloat() * 0.1f + 0.9f);
-
-                player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
-                {
-                    if(stand.getStandID() == 2) player.removeEffect(MobEffects.FIRE_RESISTANCE);
-                    stand.deactivateStand();
-                    ModMessages.sendToPlayer(new StandActiveDataSyncS2CPacket(stand.getStandActive()), player);
-                });
-            }
-            else
-            {
-                player.sendSystemMessage(Component.literal("Skill issue."));
             }
         });
         return true;

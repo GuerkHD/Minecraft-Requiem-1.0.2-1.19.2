@@ -7,9 +7,9 @@ public class PlayerStand
     private boolean standUser = false;
     private boolean standActive = false;
     private int standID;
-    //ID 1 = The World
-    //ID 2 = D4C
-    //ID 3 = Magicians Red
+    //ID 0 = The World
+    //ID 1 = D4C
+    //ID 2 = Magicians Red
 
     public boolean getStandUser()
     {

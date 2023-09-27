@@ -5,9 +5,9 @@ public class ClientStandData
     private static boolean standUser;
     private static boolean standActive;
     private static int standID;
-    //ID 1 = The World
-    //ID 2 = D4C
-    //ID 3 = Magicians Red
+    //ID 0 = The World
+    //ID 1 = D4C
+    //ID 2 = Magicians Red
 
     public static boolean getStandUser()
     {

@@ -10,6 +10,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.projectile.LargeFireball;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -49,7 +51,10 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 2)
             {
-                player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, -1, 0));
+                LargeFireball fireball = new LargeFireball(level, player, player.getViewVector(1f).x, player.getViewVector(1f).y, player.getViewVector(1f).z, 3);
+                fireball.setPosRaw(player.getX(), player.getY()+player.getEyeHeight(), player.getZ());
+                fireball.shoot(player.getViewVector(1f).x, player.getViewVector(1f).y, player.getViewVector(1f).z, 3f, 0f);
+                level.addFreshEntity(fireball);
             }
         });
         return true;
@@ -73,6 +78,6 @@ public class AbilityC2SPacket
     {
         return player.getCapability(PlayerStandProvider.PLAYER_STAND)
                 .map(stand -> { return stand.getStandID(); })
-                .orElse(2);
+                .orElse(10);
     }
 }

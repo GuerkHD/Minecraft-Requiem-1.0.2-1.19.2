@@ -10,6 +10,8 @@ public class PlayerStand
     //ID 0 = The World
     //ID 1 = D4C
     //ID 2 = Magicians Red
+    //ID 3 = C-Moon
+    //ID 4 = Weather Report
 
     public boolean getStandUser()
     {

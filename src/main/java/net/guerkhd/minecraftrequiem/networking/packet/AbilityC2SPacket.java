@@ -2,6 +2,7 @@ package net.guerkhd.minecraftrequiem.networking.packet;
 
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.stand.PlayerStandProvider;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -10,10 +11,15 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +30,9 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.network.NetworkEvent;
 
+import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class AbilityC2SPacket
 {
@@ -50,14 +58,22 @@ public class AbilityC2SPacket
         {
             ServerPlayer player = context.getSender();
             ServerLevel level = player.getLevel();
+            BlockPos respawnPos = player.getLevel().getSharedSpawnPos();
 
             if(getStandID(player) == 0)
             {
                 theWorld(level, player);
+                List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
+
+                for(LivingEntity ent : list)
+                {
+                    if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 6));
+                }
             }
             else if(getStandID(player) == 1)
             {
-
+                player.teleportTo(player.getServer().getLevel(Level.OVERWORLD), respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), player.getYRot(), player.getXRot());
+                player.sendSystemMessage(Component.literal(""+respawnPos));
             }
             else if(getStandID(player) == 2)
             {
@@ -65,6 +81,31 @@ public class AbilityC2SPacket
                 fireball.setPosRaw(player.getX(), player.getY()+player.getEyeHeight(), player.getZ());
                 fireball.shoot(player.getViewVector(1f).x, player.getViewVector(1f).y, player.getViewVector(1f).z, 3f, 0f);
                 level.addFreshEntity(fireball);
+            }
+            else if(getStandID(player) == 3)
+            {
+                List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
+
+                for(LivingEntity ent : list)
+                {
+                    if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 40, 9));
+                }
+            }
+            else if(getStandID(player) == 4)
+            {
+                List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
+
+                for(LivingEntity ent : list)
+                {
+                    if(!ent.equals(player) && level.isThundering() && RandomSource.createNewThreadLocalInstance().nextInt(3) == 0)
+                    {
+                        LightningBolt lightningBolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
+                        lightningBolt.setPosRaw(ent.getX(), ent.getY(), ent.getZ());
+                        level.addFreshEntity(lightningBolt);
+                    }
+                }
+
+                if(!level.isThundering()) level.setWeatherParameters(0, 1200, true, true);
             }
         });
         return true;

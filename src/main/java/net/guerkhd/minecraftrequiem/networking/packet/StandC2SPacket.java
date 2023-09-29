@@ -67,6 +67,7 @@ public class StandC2SPacket
                 player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
                 {
                     if(stand.getStandID() == 2) player.removeEffect(MobEffects.FIRE_RESISTANCE);
+                    if(stand.getStandID() == 4 && level.isThundering()) level.setWeatherParameters(0, 0, false, false);
                     stand.deactivateStand();
                     ModMessages.sendToPlayer(new StandActiveDataSyncS2CPacket(stand.getStandActive()), player);
                 });

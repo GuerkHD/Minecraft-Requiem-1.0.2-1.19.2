@@ -8,14 +8,21 @@ import net.guerkhd.minecraftrequiem.stand.PlayerStand;
 import net.guerkhd.minecraftrequiem.stand.PlayerStandProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = MinecraftRequiem.MOD_ID)
 public class ModEvents
@@ -67,5 +74,43 @@ public class ModEvents
                 });
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onLivingHurt(LivingHurtEvent event)
+    {
+        if(event.getSource().getEntity() instanceof Player player && standIsActive(player) && getStandID(player) == 5)
+        {
+            event.getEntity().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 1200, 6));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerTick(TickEvent.PlayerTickEvent event)
+    {
+        List<LivingEntity> listIn = event.player.getLevel().getEntitiesOfClass(LivingEntity.class, event.player.getBoundingBox().inflate(5));
+        List<LivingEntity> listOut = event.player.getLevel().getEntitiesOfClass(LivingEntity.class, event.player.getBoundingBox().inflate(20));
+
+        for(LivingEntity ent : listOut)
+        {
+            if(!listIn.contains(ent) && ent.hasEffect(MobEffects.MOVEMENT_SLOWDOWN) && getStandID(event.player) == 5)
+            {
+                ent.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+            }
+        }
+    }
+
+    private static int getStandID(Player player)
+    {
+        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
+                .map(stand -> { return stand.getStandID(); })
+                .orElse(10);
+    }
+
+    private static boolean standIsActive(Player player)
+    {
+        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
+                .map(stand -> { return stand.getStandActive(); })
+                .orElse(false);
     }
 }

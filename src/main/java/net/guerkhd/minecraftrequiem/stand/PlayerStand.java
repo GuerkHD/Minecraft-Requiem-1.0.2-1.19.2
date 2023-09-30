@@ -12,6 +12,7 @@ public class PlayerStand
     //ID 2 = Magicians Red
     //ID 3 = C-Moon
     //ID 4 = Weather Report
+    //ID 5 = Echos Act 3
 
     public boolean getStandUser()
     {

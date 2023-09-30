@@ -10,8 +10,10 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkEvent;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public class RemoverC2SPacket
@@ -52,6 +54,11 @@ public class RemoverC2SPacket
                 {
                     if(stand.getStandActive())
                     {
+                        List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(20));
+                        for(LivingEntity ent : list)
+                        {
+                            if(stand.getStandID() == 5 && ent.hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) ent.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+                        }
                         if(stand.getStandID() == 2) player.removeEffect(MobEffects.FIRE_RESISTANCE);
                         if(stand.getStandID() == 4 && (level.isThundering() || level.isRaining())) level.setWeatherParameters(0, 0, false, false);
                         stand.deactivateStand();

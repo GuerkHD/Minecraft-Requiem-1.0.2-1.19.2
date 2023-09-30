@@ -73,7 +73,6 @@ public class AbilityC2SPacket
             else if(getStandID(player) == 1)
             {
                 player.teleportTo(player.getServer().getLevel(Level.OVERWORLD), respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), player.getYRot(), player.getXRot());
-                player.sendSystemMessage(Component.literal(""+respawnPos));
             }
             else if(getStandID(player) == 2)
             {
@@ -106,6 +105,26 @@ public class AbilityC2SPacket
                 }
 
                 if(!level.isThundering()) level.setWeatherParameters(0, 1200, true, true);
+            }
+            else if(getStandID(player) == 5)
+            {
+                //Nothing to see here
+            }
+            else if(getStandID(player) == 6)
+            {
+
+            }
+            else if(getStandID(player) == 7)
+            {
+
+            }
+            else if(getStandID(player) == 8)
+            {
+
+            }
+            else if(getStandID(player) == 9)
+            {
+
             }
         });
         return true;

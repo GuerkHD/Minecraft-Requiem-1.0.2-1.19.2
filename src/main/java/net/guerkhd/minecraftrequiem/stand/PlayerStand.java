@@ -13,6 +13,7 @@ public class PlayerStand
     //ID 3 = C-Moon
     //ID 4 = Weather Report
     //ID 5 = Echos Act 3
+    //ID 6 = Highway To Hell
 
     public boolean getStandUser()
     {

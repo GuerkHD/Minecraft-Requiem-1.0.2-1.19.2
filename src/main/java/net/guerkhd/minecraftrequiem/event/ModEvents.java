@@ -3,16 +3,21 @@ package net.guerkhd.minecraftrequiem.event;
 import net.guerkhd.minecraftrequiem.MinecraftRequiem;
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.networking.packet.StandActiveDataSyncS2CPacket;
+import net.guerkhd.minecraftrequiem.networking.packet.StandIDDataSyncS2CPacket;
 import net.guerkhd.minecraftrequiem.networking.packet.StandUserDataSyncS2CPacket;
 import net.guerkhd.minecraftrequiem.stand.PlayerStand;
 import net.guerkhd.minecraftrequiem.stand.PlayerStandProvider;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
@@ -71,6 +76,7 @@ public class ModEvents
                 {
                     ModMessages.sendToPlayer(new StandUserDataSyncS2CPacket(stand.getStandUser()), player);
                     ModMessages.sendToPlayer(new StandActiveDataSyncS2CPacket(stand.getStandActive()), player);
+                    ModMessages.sendToPlayer(new StandIDDataSyncS2CPacket(stand.getStandID()), player);
                 });
             }
         }
@@ -79,26 +85,41 @@ public class ModEvents
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event)
     {
-        if(event.getSource().getEntity() instanceof Player player && standIsActive(player) && getStandID(player) == 5)
+        if(event.getSource().getEntity() instanceof Player player && getStandID(player) == 5 && standIsActive(player))
         {
-            event.getEntity().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 1200, 6));
+            event.getEntity().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 6));
+        }
+
+        if(event.getEntity() instanceof Player player && getStandID(player) == 6 && standIsActive(player))
+        {
+            List<Player> list = event.getEntity().getLevel().getEntitiesOfClass(Player.class, event.getEntity().getBoundingBox().inflate(20));
+            list.remove(event.getEntity());
+
+            if(!list.isEmpty()) getClosest(list, event.getEntity()).hurt(DamageSource.MAGIC, event.getAmount());
         }
     }
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event)
     {
-        List<LivingEntity> listIn = event.player.getLevel().getEntitiesOfClass(LivingEntity.class, event.player.getBoundingBox().inflate(5));
-        List<LivingEntity> listOut = event.player.getLevel().getEntitiesOfClass(LivingEntity.class, event.player.getBoundingBox().inflate(20));
+        List<LivingEntity> list3F = event.player.getLevel().getEntitiesOfClass(LivingEntity.class, event.player.getBoundingBox().inflate(5));
+        list3F.remove(event.player);
 
-        for(LivingEntity ent : listOut)
+        for(LivingEntity ent : list3F)
         {
-            if(!listIn.contains(ent) && ent.hasEffect(MobEffects.MOVEMENT_SLOWDOWN) && getStandID(event.player) == 5)
+            if(ent.hasEffect(MobEffects.MOVEMENT_SLOWDOWN) && getStandID(event.player) == 5 && standIsActive(event.player))
             {
-                ent.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+                ent.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 6));
             }
         }
+
+        List<Player> listHTH = event.player.getLevel().getEntitiesOfClass(Player.class, event.player.getBoundingBox().inflate(20));
+        listHTH.remove(event.player);
+
+        if(!listHTH.isEmpty() && getStandID(event.player) == 6 && standIsActive(event.player)) getClosest(listHTH, event.player).addEffect(new MobEffectInstance(MobEffects.GLOWING, 20, 0));
     }
+
+
 
     private static int getStandID(Player player)
     {
@@ -112,5 +133,20 @@ public class ModEvents
         return player.getCapability(PlayerStandProvider.PLAYER_STAND)
                 .map(stand -> { return stand.getStandActive(); })
                 .orElse(false);
+    }
+
+    private static Player getClosest(List<Player> list, LivingEntity user)
+    {
+        Player closest = list.get(0);
+
+        for(Player player : list)
+        {
+            if(player.position().distanceToSqr(user.position()) < closest.position().distanceToSqr(user.position()))
+            {
+                closest = player;
+            }
+        }
+
+        return closest;
     }
 }

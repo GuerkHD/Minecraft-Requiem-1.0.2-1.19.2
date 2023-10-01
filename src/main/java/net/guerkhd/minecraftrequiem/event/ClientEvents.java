@@ -12,9 +12,11 @@ import net.minecraft.network.protocol.game.ServerboundClientCommandPacket;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -33,6 +35,16 @@ public class ClientEvents
             else if(KeyBinding.ABILITY_KEY.consumeClick() && ClientStandData.getStandActive())
             {
                 ModMessages.sendToServer(new AbilityC2SPacket());
+            }
+        }
+
+        @SubscribeEvent
+        public static void onPlayerTick(TickEvent.PlayerTickEvent event)
+        {
+            if(ClientStandData.getStandID() == 3 && event.player.horizontalCollision && ClientStandData.getStandActive())
+            {
+                Vec3 motion = event.player.getDeltaMovement();
+                event.player.setDeltaMovement(motion.x, 0.2, motion.z);
             }
         }
     }

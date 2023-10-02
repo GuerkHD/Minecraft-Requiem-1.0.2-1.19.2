@@ -5,6 +5,7 @@ public class ClientStandData
     private static boolean standUser;
     private static boolean standActive;
     private static int standID;
+    private static boolean bomb;
     //ID 0 = The World
     //ID 1 = D4C
     //ID 2 = Magicians Red
@@ -12,6 +13,7 @@ public class ClientStandData
     //ID 4 = Weather Report
     //ID 5 = Echos Act 3
     //ID 6 = Highway To Hell
+    //ID 7 = Killer Queen
 
     public static boolean getStandUser()
     {
@@ -38,6 +40,16 @@ public class ClientStandData
     public static void setStandID(int standID)
     {
         ClientStandData.standID = standID;
+    }
+
+    public static boolean getBomb()
+    {
+        return bomb;
+    }
+
+    public static void setBomb(boolean bomb)
+    {
+        ClientStandData.bomb = bomb;
     }
 
 }

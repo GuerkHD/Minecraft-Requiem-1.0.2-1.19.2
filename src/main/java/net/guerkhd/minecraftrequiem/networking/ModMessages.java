@@ -67,6 +67,11 @@ public class ModMessages
                 .encoder(StandIDDataSyncS2CPacket::toBytes)
                 .consumerMainThread(StandIDDataSyncS2CPacket::handle)
                 .add();
+        net.messageBuilder(StandBombDataSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(StandBombDataSyncS2CPacket::new)
+                .encoder(StandBombDataSyncS2CPacket::toBytes)
+                .consumerMainThread(StandBombDataSyncS2CPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message)

@@ -2,6 +2,7 @@ package net.guerkhd.minecraftrequiem;
 
 import com.mojang.logging.LogUtils;
 import net.guerkhd.minecraftrequiem.block.ModBlocks;
+import net.guerkhd.minecraftrequiem.effect.ModEffects;
 import net.guerkhd.minecraftrequiem.item.ModItems;
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.world.feature.ModConfiguredFeatures;
@@ -31,6 +32,8 @@ public class MinecraftRequiem
 
         ModConfiguredFeatures.register(modEventBus);
         ModPlacedFeatures.register(modEventBus);
+
+        ModEffects.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 

@@ -16,5 +16,8 @@
   "key.minecraftrequiem.summon_stand": "Summon Stand",
   "key.minecraftrequiem.stand_ability": "Stand Ability",
 
+  "effect.minecraftrequiem.freeze": "Time Stop",
+  "effect.minecraftrequiem.bomb": "Bomb",
+
   "itemGroup.minecraftrequiemtab": "Minecraft Requiem"
 }

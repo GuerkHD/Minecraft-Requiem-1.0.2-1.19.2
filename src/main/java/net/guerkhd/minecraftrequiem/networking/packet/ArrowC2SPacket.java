@@ -2,8 +2,10 @@ package net.guerkhd.minecraftrequiem.networking.packet;
 
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.stand.PlayerStandProvider;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.commands.TitleCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -50,22 +52,50 @@ public class ArrowC2SPacket
                 player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
                 {
                     stand.makeStandUser();
-                    stand.setStandID(RandomSource.createNewThreadLocalInstance().nextInt(7));
+                    stand.setStandID(RandomSource.createNewThreadLocalInstance().nextInt(8));
                     ModMessages.sendToPlayer(new StandUserDataSyncS2CPacket(stand.getStandUser()), player);
                     ModMessages.sendToPlayer(new StandIDDataSyncS2CPacket(stand.getStandID()), player);
 
-                    player.sendSystemMessage(Component.literal("StandID = " + stand.getStandID()));
-
-                    /*
-                    if()
+                    if(stand.getStandID() == 0)
                     {
-
+                        player.sendSystemMessage(Component.literal("The World").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
                     }
-                    else if(stand.getStandID() == )
+                    else if(stand.getStandID() == 1)
                     {
-                        titl
+                        player.sendSystemMessage(Component.literal("Dirty Deeds Done Dirt Cheap").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.BLUE));
                     }
-                    */
+                    else if(stand.getStandID() == 2)
+                    {
+                        player.sendSystemMessage(Component.literal("Magicians Red").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.RED));
+                    }
+                    else if(stand.getStandID() == 3)
+                    {
+                        player.sendSystemMessage(Component.literal("C-Moon").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_GREEN));
+                    }
+                    else if(stand.getStandID() == 4)
+                    {
+                        player.sendSystemMessage(Component.literal("Weather Report").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.WHITE));
+                    }
+                    else if(stand.getStandID() == 5)
+                    {
+                        player.sendSystemMessage(Component.literal("Echos Act 3").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GREEN));
+                    }
+                    else if(stand.getStandID() == 6)
+                    {
+                        player.sendSystemMessage(Component.literal("Highway To Hell").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_PURPLE));
+                    }
+                    else if(stand.getStandID() == 7)
+                    {
+                        player.sendSystemMessage(Component.literal("Killer Queen").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.LIGHT_PURPLE));
+                    }
+                    else if(stand.getStandID() == 8)
+                    {
+                        player.sendSystemMessage(Component.literal("").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.BLACK));
+                    }
+                    else if(stand.getStandID() == 9)
+                    {
+                        player.sendSystemMessage(Component.literal("").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.BLACK));
+                    }
                 });
             }
         });

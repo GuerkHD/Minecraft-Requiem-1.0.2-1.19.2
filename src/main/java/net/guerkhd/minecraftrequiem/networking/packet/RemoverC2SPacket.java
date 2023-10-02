@@ -2,6 +2,7 @@ package net.guerkhd.minecraftrequiem.networking.packet;
 
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.stand.PlayerStandProvider;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -66,7 +67,7 @@ public class RemoverC2SPacket
                     }
                     stand.undoStandUser();
                     ModMessages.sendToPlayer(new StandUserDataSyncS2CPacket(stand.getStandUser()), player);
-                    player.sendSystemMessage(Component.literal("Stand removed."));
+                    player.sendSystemMessage(Component.literal("Stand removed.").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GRAY));
                 });
             }
         });

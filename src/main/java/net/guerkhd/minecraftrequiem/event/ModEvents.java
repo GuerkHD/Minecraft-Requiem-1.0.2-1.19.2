@@ -1,8 +1,10 @@
 package net.guerkhd.minecraftrequiem.event;
 
 import net.guerkhd.minecraftrequiem.MinecraftRequiem;
+import net.guerkhd.minecraftrequiem.effect.ModEffects;
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.networking.packet.StandActiveDataSyncS2CPacket;
+import net.guerkhd.minecraftrequiem.networking.packet.StandBombDataSyncS2CPacket;
 import net.guerkhd.minecraftrequiem.networking.packet.StandIDDataSyncS2CPacket;
 import net.guerkhd.minecraftrequiem.networking.packet.StandUserDataSyncS2CPacket;
 import net.guerkhd.minecraftrequiem.stand.PlayerStand;
@@ -77,6 +79,7 @@ public class ModEvents
                     ModMessages.sendToPlayer(new StandUserDataSyncS2CPacket(stand.getStandUser()), player);
                     ModMessages.sendToPlayer(new StandActiveDataSyncS2CPacket(stand.getStandActive()), player);
                     ModMessages.sendToPlayer(new StandIDDataSyncS2CPacket(stand.getStandID()), player);
+                    ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
                 });
             }
         }
@@ -96,6 +99,18 @@ public class ModEvents
             list.remove(event.getEntity());
 
             if(!list.isEmpty()) getClosest(list, event.getEntity()).hurt(DamageSource.MAGIC, event.getAmount());
+        }
+
+        if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 7 && standIsActive(player) && !getBomb(player))
+        {
+            event.getEntity().addEffect(new MobEffectInstance(MobEffects.GLOWING, 36000, 0));
+            event.getEntity().addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 36000, 0));
+
+            player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
+            {
+                stand.setBomb(true);
+                ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
+            });
         }
     }
 
@@ -132,6 +147,13 @@ public class ModEvents
     {
         return player.getCapability(PlayerStandProvider.PLAYER_STAND)
                 .map(stand -> { return stand.getStandActive(); })
+                .orElse(false);
+    }
+
+    private static boolean getBomb(Player player)
+    {
+        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
+                .map(stand -> { return stand.getBomb(); })
                 .orElse(false);
     }
 

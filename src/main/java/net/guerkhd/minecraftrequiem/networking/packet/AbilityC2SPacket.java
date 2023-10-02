@@ -1,5 +1,6 @@
 package net.guerkhd.minecraftrequiem.networking.packet;
 
+import net.guerkhd.minecraftrequiem.effect.ModEffects;
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.stand.PlayerStandProvider;
 import net.minecraft.core.BlockPos;
@@ -14,6 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -24,6 +26,7 @@ import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.DiggerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
@@ -69,7 +72,7 @@ public class AbilityC2SPacket
 
                 for(LivingEntity ent : list)
                 {
-                    if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 6));
+                    if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(ModEffects.FREEZE.get(), 40, 0));
                 }
             }
             else if(getStandID(player) == 1)
@@ -129,7 +132,23 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 7)
             {
+                List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(100));
 
+                for(LivingEntity ent : list)
+                {
+                    if(ent.hasEffect(ModEffects.BOMB.get()))
+                    {
+                        ent.removeEffect(ModEffects.BOMB.get());
+                        ent.removeEffect(MobEffects.GLOWING);
+                        level.explode(player, ent.getX(), ent.getY()+2, ent.getZ(), 1, Explosion.BlockInteraction.NONE);
+
+                        player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
+                        {
+                            stand.setBomb(false);
+                            ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
+                        });
+                    }
+                }
             }
             else if(getStandID(player) == 8)
             {

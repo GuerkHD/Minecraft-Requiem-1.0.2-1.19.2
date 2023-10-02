@@ -24,6 +24,7 @@ import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -132,6 +133,23 @@ public class ModEvents
         listHTH.remove(event.player);
 
         if(!listHTH.isEmpty() && getStandID(event.player) == 6 && standIsActive(event.player)) getClosest(listHTH, event.player).addEffect(new MobEffectInstance(MobEffects.GLOWING, 20, 0));
+    }
+
+    @SubscribeEvent
+    public static void onLivingTick(LivingEvent.LivingTickEvent event)
+    {
+        List<Player> listKQ = event.getEntity().getLevel().getEntitiesOfClass(Player.class, event.getEntity().getBoundingBox().inflate(50));
+        boolean bomb = false;
+
+        for(Player player : listKQ)
+        {
+            if(getBomb(player)) bomb = true;
+        }
+        if(!bomb)
+        {
+            event.getEntity().removeEffect(MobEffects.GLOWING);
+            event.getEntity().removeEffect(ModEffects.BOMB.get());
+        }
     }
 
 

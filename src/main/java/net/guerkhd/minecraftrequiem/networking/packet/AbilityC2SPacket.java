@@ -132,7 +132,13 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 7)
             {
-                List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(100));
+                List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(50));
+                level.playSound(null
+                        , player.getOnPos()
+                        , SoundEvents.UI_BUTTON_CLICK
+                        , SoundSource.PLAYERS
+                        , 0.5f
+                        , level.random.nextFloat() * 0.1f + 0.9f);
 
                 for(LivingEntity ent : list)
                 {
@@ -140,7 +146,7 @@ public class AbilityC2SPacket
                     {
                         ent.removeEffect(ModEffects.BOMB.get());
                         ent.removeEffect(MobEffects.GLOWING);
-                        level.explode(player, ent.getX(), ent.getY()+2, ent.getZ(), 1, Explosion.BlockInteraction.NONE);
+                        level.explode(player, ent.getX(), ent.getY()+1, ent.getZ(), 1, Explosion.BlockInteraction.NONE);
 
                         player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
                         {
@@ -149,6 +155,15 @@ public class AbilityC2SPacket
                         });
                     }
                 }
+
+                player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
+                {
+                    if(stand.getBomb())
+                    {
+                        stand.setBomb(false);
+                        ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
+                    }
+                });
             }
             else if(getStandID(player) == 8)
             {

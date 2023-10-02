@@ -13,6 +13,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -89,10 +91,25 @@ public class ModEvents
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event)
     {
-        if(event.getSource().getEntity() instanceof Player player && getStandID(player) == 5 && standIsActive(player))
+        if(event.getSource().getEntity() instanceof Player player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() >= 12)
         {
             event.getEntity().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 6));
-            player.causeFoodExhaustion(60);
+            player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - 12);
+            event.getEntity().getLevel().playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.ANVIL_PLACE
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(event.getSource().getEntity() instanceof Player player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() < 12)
+        {
+            event.getEntity().getLevel().playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.ANVIL_FALL
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
         }
 
         if(event.getEntity() instanceof Player player && getStandID(player) == 6 && standIsActive(player))

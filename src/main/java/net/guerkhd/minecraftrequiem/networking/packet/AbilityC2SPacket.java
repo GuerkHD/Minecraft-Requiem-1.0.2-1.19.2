@@ -65,63 +65,108 @@ public class AbilityC2SPacket
             ServerLevel level = player.getLevel();
             BlockPos respawnPos = player.getLevel().getSharedSpawnPos();
 
-            float cost = 0f;
+            int food = player.getFoodData().getFoodLevel();
+            int cost = 0;
 
             if(getStandID(player) == 0)
             {
-                cost = 30;
+                cost = 6;
 
-                theWorld(level, player);
-                List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
-
-                for(LivingEntity ent : list)
+                if(food >= cost)
                 {
-                    if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(ModEffects.FREEZE.get(), 40, 0));
+                    theWorld(level, player);
+                    List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
+
+                    for(LivingEntity ent : list)
+                    {
+                        if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(ModEffects.FREEZE.get(), 40, 0));
+                    }
+                }
+                else
+                {
+                    cost = 0;
+                    standSound(level, player, 0, false);
                 }
             }
             else if(getStandID(player) == 1)
             {
-                cost = 100;
+                cost = 17;
 
-                player.teleportTo(player.getServer().getLevel(Level.OVERWORLD), respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), player.getYRot(), player.getXRot());
+                if(food >= cost && !player.getLevel().equals(Level.OVERWORLD))
+                {
+                    standSound(level, player, 1, true);
+                    player.teleportTo(player.getServer().getLevel(Level.OVERWORLD), respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), player.getYRot(), player.getXRot());
+                }
+                else
+                {
+                    cost = 0;
+                    standSound(level, player, 1, false);
+                }
             }
             else if(getStandID(player) == 2)
             {
-                cost = 30;
+                cost = 5;
 
-                LargeFireball fireball = new LargeFireball(level, player, player.getViewVector(1f).x, player.getViewVector(1f).y, player.getViewVector(1f).z, 3);
-                fireball.setPosRaw(player.getX(), player.getY()+player.getEyeHeight(), player.getZ());
-                fireball.shoot(player.getViewVector(1f).x, player.getViewVector(1f).y, player.getViewVector(1f).z, 3f, 0f);
-                level.addFreshEntity(fireball);
+                if(food >= cost)
+                {
+                    standSound(level, player, 2, true);
+                    LargeFireball fireball = new LargeFireball(level, player, player.getViewVector(1f).x, player.getViewVector(1f).y, player.getViewVector(1f).z, 3);
+                    fireball.setPosRaw(player.getX(), player.getY()+player.getEyeHeight(), player.getZ());
+                    fireball.shoot(player.getViewVector(1f).x, player.getViewVector(1f).y, player.getViewVector(1f).z, 3f, 0f);
+                    level.addFreshEntity(fireball);
+                }
+                else
+                {
+                    cost = 0;
+                    standSound(level, player, 2, false);
+                }
             }
             else if(getStandID(player) == 3)
             {
-                cost = 60;
+                cost = 7;
 
-                List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
-
-                for(LivingEntity ent : list)
+                if(food >= cost)
                 {
-                    if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 40, 9));
+                    standSound(level, player, 3, true);
+                    List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
+
+                    for(LivingEntity ent : list)
+                    {
+                        if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 40, 9));
+                    }
+                }
+                else
+                {
+                    cost = 0;
+                    standSound(level, player, 3, false);
                 }
             }
             else if(getStandID(player) == 4)
             {
-                cost = 30;
+                cost = 6;
 
-                List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
-
-                for(LivingEntity ent : list)
+                if(food >= cost)
                 {
-                    if(!ent.equals(player) && level.isThundering() && RandomSource.createNewThreadLocalInstance().nextInt(3) == 0)
-                    {
-                        LightningBolt lightningBolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
-                        lightningBolt.setPosRaw(ent.getX(), ent.getY(), ent.getZ());
-                        level.addFreshEntity(lightningBolt);
-                    }
-                }
+                    standSound(level, player, 4, true);
+                    List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
 
-                if(!level.isThundering()) level.setWeatherParameters(0, 1200, true, true);
+                    for(LivingEntity ent : list)
+                    {
+                        if(!ent.equals(player) && level.isThundering() && RandomSource.createNewThreadLocalInstance().nextInt(3) == 0)
+                        {
+                            LightningBolt lightningBolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
+                            lightningBolt.setPosRaw(ent.getX(), ent.getY(), ent.getZ());
+                            level.addFreshEntity(lightningBolt);
+                        }
+                    }
+
+                    if(!level.isThundering()) level.setWeatherParameters(0, 1200, true, true);
+                }
+                else
+                {
+                    cost = 0;
+                    standSound(level, player, 4, false);
+                }
             }
             else if(getStandID(player) == 5)
             {
@@ -129,55 +174,58 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 6)
             {
-                if(player.getMainHandItem().getItem() instanceof SwordItem sword)
-                {
-                    player.hurt(DamageSource.playerAttack(player), sword.getDamage() + 1f);
-                }
-                else if(player.getMainHandItem().getItem() instanceof DiggerItem tool)
-                {
-                    player.hurt(DamageSource.playerAttack(player), tool.getAttackDamage() + 1f);
-                }
-                else
-                {
-                    player.hurt(DamageSource.playerAttack(player), player.getAttackStrengthScale(0));
-                }
+                    if(player.getMainHandItem().getItem() instanceof SwordItem sword)
+                    {
+                        player.hurt(DamageSource.playerAttack(player), sword.getDamage() + 1f);
+                    }
+                    else if(player.getMainHandItem().getItem() instanceof DiggerItem tool)
+                    {
+                        player.hurt(DamageSource.playerAttack(player), tool.getAttackDamage() + 1f);
+                    }
+                    else
+                    {
+                        player.hurt(DamageSource.playerAttack(player), player.getAttackStrengthScale(0));
+                    }
             }
             else if(getStandID(player) == 7)
             {
-                cost = 60;
+                cost = 7;
 
-                List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(50));
-                level.playSound(null
-                        , player.getOnPos()
-                        , SoundEvents.UI_BUTTON_CLICK
-                        , SoundSource.PLAYERS
-                        , 0.5f
-                        , level.random.nextFloat() * 0.1f + 0.9f);
-
-                for(LivingEntity ent : list)
+                if(food >= cost)
                 {
-                    if(ent.hasEffect(ModEffects.BOMB.get()))
-                    {
-                        ent.removeEffect(ModEffects.BOMB.get());
-                        ent.removeEffect(MobEffects.GLOWING);
-                        level.explode(player, ent.getX(), ent.getY()+1, ent.getZ(), 2, Explosion.BlockInteraction.NONE);
+                    standSound(level, player, 7, true);
+                    List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(50));
 
-                        player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
+                    for(LivingEntity ent : list)
+                    {
+                        if(ent.hasEffect(ModEffects.BOMB.get()))
+                        {
+                            ent.removeEffect(ModEffects.BOMB.get());
+                            ent.removeEffect(MobEffects.GLOWING);
+                            level.explode(player, ent.getX(), ent.getY()+1, ent.getZ(), 2, Explosion.BlockInteraction.NONE);
+
+                            player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
+                            {
+                                stand.setBomb(false);
+                                ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
+                            });
+                        }
+                    }
+
+                    player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
+                    {
+                        if(stand.getBomb())
                         {
                             stand.setBomb(false);
                             ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
-                        });
-                    }
+                        }
+                    });
                 }
-
-                player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
+                else
                 {
-                    if(stand.getBomb())
-                    {
-                        stand.setBomb(false);
-                        ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
-                    }
-                });
+                    cost = 0;
+                    standSound(level, player, 7, false);
+                }
             }
             else if(getStandID(player) == 8)
             {
@@ -188,7 +236,7 @@ public class AbilityC2SPacket
 
             }
 
-            player.causeFoodExhaustion(cost);
+            player.getFoodData().setFoodLevel(food - cost);
         });
         return true;
     }
@@ -212,6 +260,149 @@ public class AbilityC2SPacket
         return player.getCapability(PlayerStandProvider.PLAYER_STAND)
                 .map(stand -> { return stand.getStandID(); })
                 .orElse(10);
+    }
+
+    private void standSound(ServerLevel level, ServerPlayer player, int ID, boolean success)
+    {
+        if(ID == 0 && success)
+        {
+            //Nothing to see here
+        }
+        else if(ID == 0 && !success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.FIRE_EXTINGUISH
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(ID == 1 && success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.WARDEN_EMERGE
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(ID == 1 && !success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.WARDEN_DEATH
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(ID == 2 && success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.CHICKEN_DEATH
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(ID == 2 && !success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.CHICKEN_AMBIENT
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(ID == 3 && success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.ENDER_CHEST_OPEN
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(ID == 3 && !success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.ENDER_CHEST_CLOSE
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(ID == 4 && success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.BEACON_ACTIVATE
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(ID == 4 && !success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.BEACON_DEACTIVATE
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(ID == 7 && success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.STONE_BUTTON_CLICK_ON
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(ID == 7 && !success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.STONE_BUTTON_CLICK_OFF
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(ID == 8 && success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.ENDERMAN_TELEPORT
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(ID == 8 && !success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.ENDERMAN_TELEPORT
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(ID == 9 && success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.ENDERMAN_TELEPORT
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(ID == 9 && !success)
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.ENDERMAN_TELEPORT
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
     }
 
     public void theWorld(Level level, LivingEntity livingEntity)

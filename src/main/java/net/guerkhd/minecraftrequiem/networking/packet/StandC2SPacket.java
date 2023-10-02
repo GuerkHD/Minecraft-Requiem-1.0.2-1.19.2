@@ -45,7 +45,7 @@ public class StandC2SPacket
             {
                 level.playSound(null
                         , player.getOnPos()
-                        , SoundEvents.CHEST_OPEN
+                        , SoundEvents.ENDERMAN_TELEPORT
                         , SoundSource.PLAYERS
                         , 0.5f
                         , level.random.nextFloat() * 0.1f + 0.9f);
@@ -61,7 +61,7 @@ public class StandC2SPacket
             {
                 level.playSound(null
                         , player.getOnPos()
-                        , SoundEvents.CHEST_CLOSE
+                        , SoundEvents.ENDERMAN_HURT
                         , SoundSource.PLAYERS
                         , 0.5f
                         , level.random.nextFloat() * 0.1f + 0.9f);

@@ -14,9 +14,9 @@ public class ModEffects
             DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MinecraftRequiem.MOD_ID);
 
     public static final RegistryObject<MobEffect> FREEZE = MOB_EFFECTS.register("freeze",
-            () -> new FreezeEffect(MobEffectCategory.HARMFUL, 3124687));
+            () -> new FreezeEffect(MobEffectCategory.HARMFUL, 0));
     public static final RegistryObject<MobEffect> BOMB = MOB_EFFECTS.register("bomb",
-            () -> new BombEffect(MobEffectCategory.HARMFUL, 3124687));
+            () -> new BombEffect(MobEffectCategory.HARMFUL, 0));
 
 
     public static void register(IEventBus eventBus)

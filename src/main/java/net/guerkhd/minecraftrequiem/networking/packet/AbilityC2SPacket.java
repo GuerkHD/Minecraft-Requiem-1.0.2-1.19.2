@@ -65,8 +65,12 @@ public class AbilityC2SPacket
             ServerLevel level = player.getLevel();
             BlockPos respawnPos = player.getLevel().getSharedSpawnPos();
 
+            float cost = 0f;
+
             if(getStandID(player) == 0)
             {
+                cost = 30;
+
                 theWorld(level, player);
                 List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
 
@@ -77,10 +81,14 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 1)
             {
+                cost = 100;
+
                 player.teleportTo(player.getServer().getLevel(Level.OVERWORLD), respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), player.getYRot(), player.getXRot());
             }
             else if(getStandID(player) == 2)
             {
+                cost = 30;
+
                 LargeFireball fireball = new LargeFireball(level, player, player.getViewVector(1f).x, player.getViewVector(1f).y, player.getViewVector(1f).z, 3);
                 fireball.setPosRaw(player.getX(), player.getY()+player.getEyeHeight(), player.getZ());
                 fireball.shoot(player.getViewVector(1f).x, player.getViewVector(1f).y, player.getViewVector(1f).z, 3f, 0f);
@@ -88,6 +96,8 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 3)
             {
+                cost = 60;
+
                 List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
 
                 for(LivingEntity ent : list)
@@ -97,6 +107,8 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 4)
             {
+                cost = 30;
+
                 List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
 
                 for(LivingEntity ent : list)
@@ -132,6 +144,8 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 7)
             {
+                cost = 60;
+
                 List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(50));
                 level.playSound(null
                         , player.getOnPos()
@@ -146,7 +160,7 @@ public class AbilityC2SPacket
                     {
                         ent.removeEffect(ModEffects.BOMB.get());
                         ent.removeEffect(MobEffects.GLOWING);
-                        level.explode(player, ent.getX(), ent.getY()+1, ent.getZ(), 1, Explosion.BlockInteraction.NONE);
+                        level.explode(player, ent.getX(), ent.getY()+1, ent.getZ(), 2, Explosion.BlockInteraction.NONE);
 
                         player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
                         {
@@ -173,6 +187,8 @@ public class AbilityC2SPacket
             {
 
             }
+
+            player.causeFoodExhaustion(cost);
         });
         return true;
     }

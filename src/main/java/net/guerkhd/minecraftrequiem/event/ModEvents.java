@@ -92,6 +92,7 @@ public class ModEvents
         if(event.getSource().getEntity() instanceof Player player && getStandID(player) == 5 && standIsActive(player))
         {
             event.getEntity().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 6));
+            player.causeFoodExhaustion(60);
         }
 
         if(event.getEntity() instanceof Player player && getStandID(player) == 6 && standIsActive(player))

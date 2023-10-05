@@ -46,10 +46,8 @@ public class ClientStandData
     {
         return bomb;
     }
-
     public static void setBomb(boolean bomb)
     {
         ClientStandData.bomb = bomb;
     }
-
 }

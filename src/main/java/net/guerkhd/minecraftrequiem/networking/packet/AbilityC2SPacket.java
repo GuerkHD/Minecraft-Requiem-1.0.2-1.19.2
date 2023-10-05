@@ -237,7 +237,7 @@ public class AbilityC2SPacket
 
             }
 
-            player.getFoodData().setFoodLevel(food - cost);
+            if(player.gameMode.isSurvival()) player.getFoodData().setFoodLevel(food - cost);
         });
         return true;
     }

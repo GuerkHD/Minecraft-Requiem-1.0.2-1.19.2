@@ -2,6 +2,7 @@ package net.guerkhd.minecraftrequiem.networking.packet;
 
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.stand.PlayerStandProvider;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -10,7 +11,10 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.List;
@@ -41,8 +45,12 @@ public class StandC2SPacket
             ServerPlayer player = context.getSender();
             ServerLevel level = player.getLevel();
 
+            Zombie standEntity = initializeStand(level, player);
+
             if(isStandUser(player) && !standIsActive(player))
             {
+                level.addFreshEntity(standEntity);
+
                 level.playSound(null
                         , player.getOnPos()
                         , SoundEvents.ENDERMAN_TELEPORT
@@ -85,6 +93,26 @@ public class StandC2SPacket
             }
         });
         return true;
+    }
+
+    private Zombie initializeStand(ServerLevel level, ServerPlayer player)
+    {
+        Zombie stand = new Zombie(level);
+
+        stand.setPos(player.getX()-1, player.getY()+0.5, player.getZ()-1);
+        stand.setAggressive(false);
+        stand.setCanPickUpLoot(false);
+        stand.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 3600, 0));
+        //stand.setInvisible(true);
+        stand.setGlowingTag(true);
+        stand.setInvulnerable(true);
+        stand.setSilent(true);
+        stand.setNoGravity(true);
+        stand.setNoAi(true);
+        stand.setCustomName(player.getName());
+        stand.setCustomNameVisible(false);
+
+        return stand;
     }
 
     private boolean isStandUser(ServerPlayer player)

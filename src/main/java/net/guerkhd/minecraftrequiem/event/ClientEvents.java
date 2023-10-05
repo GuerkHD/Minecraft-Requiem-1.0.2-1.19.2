@@ -7,11 +7,15 @@ import net.guerkhd.minecraftrequiem.networking.packet.AbilityC2SPacket;
 import net.guerkhd.minecraftrequiem.networking.packet.StandC2SPacket;
 import net.guerkhd.minecraftrequiem.util.KeyBinding;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundClientCommandPacket;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
@@ -19,6 +23,8 @@ import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.List;
 
 public class ClientEvents
 {
@@ -45,6 +51,19 @@ public class ClientEvents
             {
                 Vec3 motion = event.player.getDeltaMovement();
                 event.player.setDeltaMovement(motion.x, 0.2, motion.z);
+            }
+
+            List<Zombie> list = event.player.getLevel().getEntitiesOfClass(Zombie.class, event.player.getBoundingBox().inflate(50));
+
+            for(Zombie stand : list)
+            {
+                if(stand.hasCustomName())
+                {
+                    if(stand.getCustomName().equals(event.player.getName()) && !ClientStandData.getStandActive())
+                    {
+                        stand.remove(Entity.RemovalReason.DISCARDED);
+                    }
+                }
             }
         }
     }

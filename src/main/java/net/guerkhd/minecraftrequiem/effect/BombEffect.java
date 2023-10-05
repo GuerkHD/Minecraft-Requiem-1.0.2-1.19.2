@@ -16,7 +16,7 @@ public class BombEffect extends MobEffect
     {
         if(!plivingEntity.level.isClientSide())
         {
-
+            //Nothing to see here
         }
         super.applyEffectTick(plivingEntity, pAmplifier);
     }

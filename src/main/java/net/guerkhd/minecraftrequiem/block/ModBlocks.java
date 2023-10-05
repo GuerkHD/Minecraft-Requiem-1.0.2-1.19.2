@@ -76,7 +76,7 @@ public class ModBlocks
     {
         public static final FoodProperties GUERK_BLOCK = new FoodProperties.Builder()
                 .nutrition(20)
-                .saturationMod(2.4f)
+                .saturationMod(1.8f)
                 .build();
 
         public static final FoodProperties GUERK_ORE = new FoodProperties.Builder()
@@ -93,7 +93,7 @@ public class ModBlocks
 
         public static final FoodProperties EDIBLE_GOLD_BLOCK = new FoodProperties.Builder()
                 .nutrition(20)
-                .saturationMod(2.4f)
+                .saturationMod(1.8f)
                 .alwaysEat()
                 .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, 1200, 0), 1)
                 .build();

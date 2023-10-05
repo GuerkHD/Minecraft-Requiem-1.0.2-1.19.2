@@ -26,6 +26,7 @@ import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -92,7 +93,7 @@ public class ModEvents
     }
 
     @SubscribeEvent
-    public static void onTravelToDimension(EntityTravelToDimensionEvent event)
+    public static void onLeaveLevel(EntityLeaveLevelEvent event)
     {
         if(event.getEntity() instanceof Player player && standIsActive(player))
         {

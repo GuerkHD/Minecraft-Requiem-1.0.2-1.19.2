@@ -149,16 +149,14 @@ public class AbilityC2SPacket
                 if(food >= cost)
                 {
                     standSound(level, player, 4, true);
-                    List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
 
-                    for(LivingEntity ent : list)
+                    if(level.isThundering())
                     {
-                        if(!ent.equals(player) && level.isThundering() && RandomSource.createNewThreadLocalInstance().nextInt(3) == 0)
-                        {
+                            Vec3 vec3 = player.pick(30, 1f, false).getLocation();
+
                             LightningBolt lightningBolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
-                            lightningBolt.setPosRaw(ent.getX(), ent.getY(), ent.getZ());
+                            lightningBolt.setPosRaw(vec3.x, vec3.y, vec3.z);
                             level.addFreshEntity(lightningBolt);
-                        }
                     }
 
                     if(!level.isThundering()) level.setWeatherParameters(0, 1200, true, true);

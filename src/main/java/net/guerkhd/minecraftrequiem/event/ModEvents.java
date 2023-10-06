@@ -217,23 +217,32 @@ public class ModEvents
 
     private static int getStandID(Player player)
     {
+        /*
         return player.getCapability(PlayerStandProvider.PLAYER_STAND)
                 .map(stand -> { return stand.getStandID(); })
                 .orElse(10);
+        */
+        return getStandID(player);
     }
 
     private static boolean standIsActive(Player player)
     {
+        /*
         return player.getCapability(PlayerStandProvider.PLAYER_STAND)
                 .map(stand -> { return stand.getStandActive(); })
                 .orElse(false);
+        */
+        return ClientStandData.getStandActive();
     }
 
     private static boolean getBomb(Player player)
     {
+        /*
         return player.getCapability(PlayerStandProvider.PLAYER_STAND)
                 .map(stand -> { return stand.getBomb(); })
                 .orElse(false);
+        */
+        return ClientStandData.getBomb();
     }
 
     private static Player getClosest(List<Player> list, LivingEntity user)

@@ -222,7 +222,7 @@ public class ModEvents
                 .map(stand -> { return stand.getStandID(); })
                 .orElse(10);
         */
-        return getStandID(player);
+        return ClientStandData.getStandID();
     }
 
     private static boolean standIsActive(Player player)

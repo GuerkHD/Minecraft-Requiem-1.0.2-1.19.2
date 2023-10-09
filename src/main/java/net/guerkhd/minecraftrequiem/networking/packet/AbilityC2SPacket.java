@@ -75,12 +75,14 @@ public class AbilityC2SPacket
 
                 if(food >= cost)
                 {
-                    theWorld(level, player);
-                    List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
+                    Vec3 theWorld = player.pick(20, 1f, false).getLocation();
+                    player.moveTo(theWorld);
+
+                    List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(10));
 
                     for(LivingEntity ent : list)
                     {
-                        if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(ModEffects.FREEZE.get(), 40, 0));
+                        if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(ModEffects.FREEZE.get(), 20, 0));
                     }
                 }
                 else
@@ -97,6 +99,11 @@ public class AbilityC2SPacket
                 {
                     standSound(level, player, 1, true);
                     player.teleportTo(player.getServer().getLevel(Level.OVERWORLD), respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), player.getYRot(), player.getXRot());
+                }
+                else if(food >= 6)
+                {
+                    cost = 6;
+                    D4C(level, player);
                 }
                 else
                 {
@@ -152,10 +159,10 @@ public class AbilityC2SPacket
 
                     if(level.isThundering())
                     {
-                            Vec3 vec3 = player.pick(30, 1f, false).getLocation();
+                            Vec3 blitz = player.pick(30, 1f, false).getLocation();
 
                             LightningBolt lightningBolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
-                            lightningBolt.setPosRaw(vec3.x, vec3.y, vec3.z);
+                            lightningBolt.setPosRaw(blitz.x, blitz.y, blitz.z);
                             level.addFreshEntity(lightningBolt);
                     }
 
@@ -404,7 +411,7 @@ public class AbilityC2SPacket
         }
     }
 
-    public void theWorld(Level level, LivingEntity livingEntity)
+    public void D4C(Level level, LivingEntity livingEntity)
     {
         if (!level.isClientSide)
         {

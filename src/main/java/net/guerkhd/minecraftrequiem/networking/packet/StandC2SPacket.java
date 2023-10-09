@@ -53,7 +53,7 @@ public class StandC2SPacket
 
             if(isStandUser(player) && !standIsActive(player))
             {
-                level.addFreshEntity(standEntity);
+                if(getStandID(player) != 6) level.addFreshEntity(standEntity);
 
                 level.playSound(null
                         , player.getOnPos()
@@ -65,7 +65,7 @@ public class StandC2SPacket
                 player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
                 {
                     stand.activateStand();
-                    if(stand.getStandID() == 2) player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 36000, 0));
+                    if(stand.getStandID() == 2) player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 36000, 0, false, false));
                     ModMessages.sendToPlayer(new StandActiveDataSyncS2CPacket(stand.getStandActive()), player);
                 });
             }
@@ -80,11 +80,6 @@ public class StandC2SPacket
 
                 player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
                 {
-                    List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(20));
-                    for(LivingEntity ent : list)
-                    {
-                        if(stand.getStandID() == 5 && ent.hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) ent.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
-                    }
                     if(stand.getStandID() == 2) player.removeEffect(MobEffects.FIRE_RESISTANCE);
                     if(stand.getStandID() == 4 && level.isThundering()) level.setWeatherParameters(0, 0, false, false);
                     stand.deactivateStand();
@@ -106,8 +101,7 @@ public class StandC2SPacket
         stand.setPos(player.getX()-1, player.getY()+0.5, player.getZ()-1);
         stand.setAggressive(false);
         stand.setCanPickUpLoot(false);
-        stand.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 3600, 0));
-        //stand.setInvisible(true);
+        stand.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 3600, 0, false, false));
         stand.setGlowingTag(true);
         stand.setInvulnerable(true);
         stand.setSilent(true);

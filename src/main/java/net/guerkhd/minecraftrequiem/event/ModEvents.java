@@ -125,9 +125,10 @@ public class ModEvents
                     , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
         }
 
+        //Player List
         if(event.getEntity() instanceof Player player && getStandID(player) == 6 && standIsActive(player))
         {
-            List<Player> list = event.getEntity().getLevel().getEntitiesOfClass(Player.class, event.getEntity().getBoundingBox().inflate(20));
+            List<LivingEntity> list = event.getEntity().getLevel().getEntitiesOfClass(LivingEntity.class, event.getEntity().getBoundingBox().inflate(20));
             list.remove(event.getEntity());
 
             if(!list.isEmpty()) getClosest(list, event.getEntity()).hurt(DamageSource.MAGIC, event.getAmount());
@@ -135,8 +136,8 @@ public class ModEvents
 
         if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 7 && standIsActive(player) && !getBomb(player) && !event.getEntity().hasEffect(MobEffects.GLOWING))
         {
-            event.getEntity().addEffect(new MobEffectInstance(MobEffects.GLOWING, 36000, 0));
-            event.getEntity().addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 36000, 0));
+            //event.getEntity().addEffect(new MobEffectInstance(MobEffects.GLOWING, 36000, 0, false, false));
+            event.getEntity().addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 36000, 0, false, false));
 
             player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
             {
@@ -149,26 +150,27 @@ public class ModEvents
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event)
     {
-        if(getStandID(event.player) == 5)
+        if(getStandID(event.player) == 5 && standIsActive(event.player))
         {
             List<LivingEntity> list3F = event.player.getLevel().getEntitiesOfClass(LivingEntity.class, event.player.getBoundingBox().inflate(5));
             list3F.remove(event.player);
 
             for(LivingEntity ent : list3F)
             {
-                if(ent.hasEffect(MobEffects.MOVEMENT_SLOWDOWN) && getStandID(event.player) == 5 && standIsActive(event.player))
+                if(ent.hasEffect(MobEffects.MOVEMENT_SLOWDOWN))
                 {
                     ent.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 6));
                 }
             }
         }
 
-        if(getStandID(event.player) == 6)
+        //Player List
+        if(getStandID(event.player) == 6 && standIsActive(event.player))
         {
-            List<Player> listHTH = event.player.getLevel().getEntitiesOfClass(Player.class, event.player.getBoundingBox().inflate(20));
+            List<LivingEntity> listHTH = event.player.getLevel().getEntitiesOfClass(LivingEntity.class, event.player.getBoundingBox().inflate(20));
             listHTH.remove(event.player);
 
-            if(!listHTH.isEmpty() && getStandID(event.player) == 6 && standIsActive(event.player)) getClosest(listHTH, event.player).addEffect(new MobEffectInstance(MobEffects.GLOWING, 20, 0));
+            if(!listHTH.isEmpty()) getClosest(listHTH, event.player).addEffect(new MobEffectInstance(MobEffects.GLOWING, 10, 0, false, false));
         }
     }
 
@@ -185,7 +187,7 @@ public class ModEvents
         }
         if(!bomb)
         {
-            event.getEntity().removeEffect(MobEffects.GLOWING);
+            //event.getEntity().removeEffect(MobEffects.GLOWING);
             event.getEntity().removeEffect(ModEffects.BOMB.get());
         }
 
@@ -245,15 +247,16 @@ public class ModEvents
         return ClientStandData.getBomb();
     }
 
-    private static Player getClosest(List<Player> list, LivingEntity user)
+    //Player List
+    private static LivingEntity getClosest(List<LivingEntity> list, LivingEntity user)
     {
-        Player closest = list.get(0);
+        LivingEntity closest = list.get(0);
 
-        for(Player player : list)
+        for(LivingEntity livingEntity : list)
         {
-            if(player.position().distanceToSqr(user.position()) < closest.position().distanceToSqr(user.position()))
+            if(livingEntity.position().distanceToSqr(user.position()) < closest.position().distanceToSqr(user.position()))
             {
-                closest = player;
+                closest = livingEntity;
             }
         }
 

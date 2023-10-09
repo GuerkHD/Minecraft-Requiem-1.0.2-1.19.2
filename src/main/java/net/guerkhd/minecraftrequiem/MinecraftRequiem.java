@@ -5,6 +5,7 @@ import net.guerkhd.minecraftrequiem.block.ModBlocks;
 import net.guerkhd.minecraftrequiem.effect.ModEffects;
 import net.guerkhd.minecraftrequiem.item.ModItems;
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
+import net.guerkhd.minecraftrequiem.sound.ModSounds;
 import net.guerkhd.minecraftrequiem.world.feature.ModConfiguredFeatures;
 import net.guerkhd.minecraftrequiem.world.feature.ModPlacedFeatures;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,6 +35,7 @@ public class MinecraftRequiem
         ModPlacedFeatures.register(modEventBus);
 
         ModEffects.register(modEventBus);
+        ModSounds.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 

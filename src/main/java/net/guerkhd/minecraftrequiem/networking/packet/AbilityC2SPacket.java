@@ -2,6 +2,7 @@ package net.guerkhd.minecraftrequiem.networking.packet;
 
 import net.guerkhd.minecraftrequiem.effect.ModEffects;
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
+import net.guerkhd.minecraftrequiem.sound.ModSounds;
 import net.guerkhd.minecraftrequiem.stand.PlayerStandProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -77,6 +78,7 @@ public class AbilityC2SPacket
                 {
                     Vec3 theWorld = player.pick(20, 1f, false).getLocation();
                     player.moveTo(theWorld);
+                    standSound(level, player, 0, true);
 
                     List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(10));
 
@@ -95,7 +97,7 @@ public class AbilityC2SPacket
             {
                 cost = 17;
 
-                if(food >= cost && !player.getLevel().equals(Level.OVERWORLD))
+                if(food >= cost && !player.getLevel().dimension().equals(Level.OVERWORLD))
                 {
                     standSound(level, player, 1, true);
                     player.teleportTo(player.getServer().getLevel(Level.OVERWORLD), respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), player.getYRot(), player.getXRot());
@@ -272,7 +274,12 @@ public class AbilityC2SPacket
     {
         if(ID == 0 && success)
         {
-            //Nothing to see here
+            level.playSound(null
+                    , player.getOnPos()
+                    , ModSounds.ZA_WARUDO.get()
+                    , SoundSource.PLAYERS
+                    , 0.5f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 0 && !success)
         {

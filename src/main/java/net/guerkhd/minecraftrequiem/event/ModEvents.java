@@ -201,19 +201,18 @@ public class ModEvents
                 {
                     user = true;
 
-                    Vec3 pos = player.getViewVector(2f);
+                    Vec3 pos = player.getViewVector(3f);
                     pos = pos.reverse();
                     pos = player.getPosition(1f).add(pos);
                     pos = pos.subtract(event.getEntity().getPosition(1f));
 
-                    player.sendSystemMessage(Component.literal("Player Pos: " + player.getPosition(1f)));
-                    player.sendSystemMessage(Component.literal("Player View: " + player.getViewVector(2f)));
-                    player.sendSystemMessage(Component.literal("Stand Vec: " + pos));
+                    Vec3 dest = new Vec3(pos.x, player.position().y + 0.5, pos.z);
 
-                    //Vec3 pos = player.position().subtract(event.getEntity().position());
-                    //pos = pos.add(-1, 0.5, -1);
-                    event.getEntity().move(MoverType.SELF, pos);
-                    //event.getEntity().moveTo(pos);
+                    player.sendSystemMessage(Component.literal("Player Pos: " + player.getPosition(1f)));
+                    player.sendSystemMessage(Component.literal("Player View: " + player.getViewVector(3f)));
+                    player.sendSystemMessage(Component.literal("Stand Vec: " + dest));
+
+                    event.getEntity().move(MoverType.SELF, dest);
 
                     if(tick == 0)
                     {

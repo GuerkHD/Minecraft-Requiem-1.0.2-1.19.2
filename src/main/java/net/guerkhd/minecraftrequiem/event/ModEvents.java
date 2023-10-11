@@ -200,9 +200,21 @@ public class ModEvents
                 if(event.getEntity().getCustomName().equals(player.getName()))
                 {
                     user = true;
-                    Vec3 pos = player.position().subtract(event.getEntity().position());
-                    pos = pos.add(-1, 0.5, -1);
+
+                    Vec3 pos = player.getViewVector(2f);
+                    pos = pos.reverse();
+                    pos = player.getPosition(1f).add(pos);
+                    pos = pos.subtract(event.getEntity().getPosition(1f));
+
+                    player.sendSystemMessage(Component.literal("Player Pos: " + player.getPosition(1f)));
+                    player.sendSystemMessage(Component.literal("Player View: " + player.getViewVector(2f)));
+                    player.sendSystemMessage(Component.literal("Stand Vec: " + pos));
+
+                    //Vec3 pos = player.position().subtract(event.getEntity().position());
+                    //pos = pos.add(-1, 0.5, -1);
                     event.getEntity().move(MoverType.SELF, pos);
+                    //event.getEntity().moveTo(pos);
+
                     if(tick == 0)
                     {
                         event.getEntity().setYRot(player.getYRot());

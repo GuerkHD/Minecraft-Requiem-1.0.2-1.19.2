@@ -148,6 +148,31 @@ public class ModEvents
                 ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
             });
         }
+
+        if(event.getSource().getEntity() instanceof LivingEntity entity && event.getEntity() instanceof ServerPlayer player && getStandID(player) == 8 && standIsActive(player) && player.getFoodData().getFoodLevel() >= 10)
+        {
+            player.setXRot(entity.getXRot());
+            player.setYRot(entity.getYRot());
+            player.moveTo(behindTP(entity, player, 0));
+            player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - 10);
+            event.setCanceled(true);
+
+            event.getEntity().getLevel().playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.ENDERMAN_SCREAM
+                    , SoundSource.PLAYERS
+                    , 1f
+                    , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(event.getSource().getEntity() instanceof LivingEntity entity && event.getEntity() instanceof ServerPlayer player && getStandID(player) == 8 && standIsActive(player) && player.getFoodData().getFoodLevel() < 10)
+        {
+            event.getEntity().getLevel().playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.FIRE_EXTINGUISH
+                    , SoundSource.PLAYERS
+                    , 1f
+                    , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
+        }
     }
 
     @SubscribeEvent
@@ -204,16 +229,9 @@ public class ModEvents
                 {
                     user = true;
 
-                    Vec3 pos = new Vec3(player.getViewVector(3f).x, 0, player.getViewVector(3f).z);
-                    pos = pos.reverse();
-                    //pos = pos.add(x, 0, z);
-                    Vec3 play = new Vec3(player.getPosition(1f).x, player.getPosition(1f).y + 0.5, player.getPosition(1f).z);
-                    pos = play.add(pos);
-                    pos = pos.subtract(event.getEntity().getPosition(1f));
-
                     //player.sendSystemMessage(Component.literal("Random double: " + random()));
 
-                    event.getEntity().move(MoverType.SELF, pos);
+                    event.getEntity().move(MoverType.SELF, behindMove(player, event.getEntity(), 0.5));
 
                     if(tick == 0)
                     {
@@ -264,6 +282,30 @@ public class ModEvents
     private static double random()
     {
         return RandomSource.createNewThreadLocalInstance().nextDouble();
+    }
+
+    private static Vec3 behindTP(LivingEntity target, LivingEntity traveler, double yOffset)
+    {
+        Vec3 pos = new Vec3(target.getViewVector(3f).x, 0, target.getViewVector(3f).z);
+        pos = pos.reverse();
+        //pos = pos.add(x, 0, z);
+        Vec3 play = new Vec3(target.getPosition(1f).x, target.getPosition(1f).y + yOffset, target.getPosition(1f).z);
+        pos = play.add(pos);
+        //pos = pos.subtract(traveler.getPosition(1f));
+
+        return pos;
+    }
+
+    private static Vec3 behindMove(LivingEntity target, LivingEntity traveler, double yOffset)
+    {
+        Vec3 pos = new Vec3(target.getViewVector(3f).x, 0, target.getViewVector(3f).z);
+        pos = pos.reverse();
+        //pos = pos.add(x, 0, z);
+        Vec3 play = new Vec3(target.getPosition(1f).x, target.getPosition(1f).y + yOffset, target.getPosition(1f).z);
+        pos = play.add(pos);
+        pos = pos.subtract(traveler.getPosition(1f));
+
+        return pos;
     }
 
     //Player List

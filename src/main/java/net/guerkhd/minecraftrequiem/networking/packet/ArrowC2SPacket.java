@@ -52,7 +52,7 @@ public class ArrowC2SPacket
                 player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
                 {
                     stand.makeStandUser();
-                    stand.setStandID(RandomSource.createNewThreadLocalInstance().nextInt(8));
+                    stand.setStandID(RandomSource.createNewThreadLocalInstance().nextInt(9));
                     ModMessages.sendToPlayer(new StandUserDataSyncS2CPacket(stand.getStandUser()), player);
                     ModMessages.sendToPlayer(new StandIDDataSyncS2CPacket(stand.getStandID()), player);
 
@@ -90,7 +90,7 @@ public class ArrowC2SPacket
                     }
                     else if(stand.getStandID() == 8)
                     {
-                        player.sendSystemMessage(Component.literal("").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.BLACK));
+                        player.sendSystemMessage(Component.literal("King Crimson").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_RED));
                     }
                     else if(stand.getStandID() == 9)
                     {

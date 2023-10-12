@@ -84,7 +84,7 @@ public class AbilityC2SPacket
 
                     for(LivingEntity ent : list)
                     {
-                        if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(ModEffects.FREEZE.get(), 20, 0));
+                        if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(ModEffects.FREEZE.get(), 20, 0, false, false));
                     }
                 }
                 else
@@ -237,7 +237,7 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 8)
             {
-
+                player.addEffect(new MobEffectInstance(ModEffects.EPITAPH.get(), 100, 0, false, false));
             }
             else if(getStandID(player) == 9)
             {

@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -40,6 +41,8 @@ import java.util.List;
 public class ModEvents
 {
     private static int tick = 0;
+    //private static double x = random() / 2;
+    //private static double z = random() / 2;
 
     @SubscribeEvent
     public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event)
@@ -201,23 +204,23 @@ public class ModEvents
                 {
                     user = true;
 
-                    Vec3 pos = player.getViewVector(3f);
+                    Vec3 pos = new Vec3(player.getViewVector(3f).x, 0, player.getViewVector(3f).z);
                     pos = pos.reverse();
-                    pos = player.getPosition(1f).add(pos);
+                    //pos = pos.add(x, 0, z);
+                    Vec3 play = new Vec3(player.getPosition(1f).x, player.getPosition(1f).y + 0.5, player.getPosition(1f).z);
+                    pos = play.add(pos);
                     pos = pos.subtract(event.getEntity().getPosition(1f));
 
-                    Vec3 dest = new Vec3(pos.x, player.position().y + 0.5, pos.z);
+                    //player.sendSystemMessage(Component.literal("Random double: " + random()));
 
-                    player.sendSystemMessage(Component.literal("Player Pos: " + player.getPosition(1f)));
-                    player.sendSystemMessage(Component.literal("Player View: " + player.getViewVector(3f)));
-                    player.sendSystemMessage(Component.literal("Stand Vec: " + dest));
-
-                    event.getEntity().move(MoverType.SELF, dest);
+                    event.getEntity().move(MoverType.SELF, pos);
 
                     if(tick == 0)
                     {
                         event.getEntity().setYRot(player.getYRot());
                         event.getEntity().setXRot(player.getXRot());
+                        //x = random() / 2;
+                        //z = random() / 2;
                     }
                 }
             }
@@ -256,6 +259,11 @@ public class ModEvents
                 .orElse(false);
         */
         return ClientStandData.getBomb();
+    }
+
+    private static double random()
+    {
+        return RandomSource.createNewThreadLocalInstance().nextDouble();
     }
 
     //Player List

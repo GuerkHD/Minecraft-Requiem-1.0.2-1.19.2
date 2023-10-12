@@ -98,11 +98,11 @@ public class StandC2SPacket
     {
         Zombie stand = new Zombie(level);
 
-        stand.setPos(player.getX()-1, player.getY()+0.5, player.getZ()-1);
+        stand.setPos(player.getX()-0.5, player.getY()+0.5, player.getZ()-0.5);
         stand.setAggressive(false);
         stand.setCanPickUpLoot(false);
         stand.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 3600, 0, false, false));
-        stand.setGlowingTag(true);
+        //stand.setGlowingTag(true);
         stand.setInvulnerable(true);
         stand.setSilent(true);
         stand.setNoGravity(true);

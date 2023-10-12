@@ -278,7 +278,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , ModSounds.ZA_WARUDO.get()
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 0 && !success)
@@ -287,7 +287,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.FIRE_EXTINGUISH
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 1 && success)
@@ -296,7 +296,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.WARDEN_EMERGE
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 1 && !success)
@@ -305,7 +305,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.WARDEN_DEATH
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 2 && success)
@@ -314,7 +314,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.CHICKEN_DEATH
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 2 && !success)
@@ -323,7 +323,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.CHICKEN_AMBIENT
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 3 && success)
@@ -332,7 +332,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.ENDER_CHEST_OPEN
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 3 && !success)
@@ -341,7 +341,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.ENDER_CHEST_CLOSE
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 4 && success)
@@ -350,7 +350,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.BEACON_ACTIVATE
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 4 && !success)
@@ -359,7 +359,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.BEACON_DEACTIVATE
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 7 && success)
@@ -368,7 +368,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.STONE_BUTTON_CLICK_ON
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 7 && !success)
@@ -377,7 +377,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.STONE_BUTTON_CLICK_OFF
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 8 && success)
@@ -386,7 +386,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.ENDERMAN_TELEPORT
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 8 && !success)
@@ -395,7 +395,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.ENDERMAN_TELEPORT
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 9 && success)
@@ -404,7 +404,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.ENDERMAN_TELEPORT
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
         else if(ID == 9 && !success)
@@ -413,7 +413,7 @@ public class AbilityC2SPacket
                     , player.getOnPos()
                     , SoundEvents.ENDERMAN_TELEPORT
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
     }

@@ -115,7 +115,7 @@ public class ModEvents
                     , player.getOnPos()
                     , SoundEvents.ANVIL_PLACE
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
         }
         else if(event.getSource().getEntity() instanceof Player player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() < 12 && !event.getEntity().hasCustomName())
@@ -124,7 +124,7 @@ public class ModEvents
                     , player.getOnPos()
                     , SoundEvents.ANVIL_FALL
                     , SoundSource.PLAYERS
-                    , 0.5f
+                    , 1f
                     , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
         }
 

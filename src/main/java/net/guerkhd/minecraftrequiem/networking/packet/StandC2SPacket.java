@@ -59,7 +59,7 @@ public class StandC2SPacket
                         , player.getOnPos()
                         , SoundEvents.ENDERMAN_TELEPORT
                         , SoundSource.PLAYERS
-                        , 0.5f
+                        , 1f
                         , level.random.nextFloat() * 0.1f + 0.9f);
 
                 player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
@@ -75,7 +75,7 @@ public class StandC2SPacket
                         , player.getOnPos()
                         , SoundEvents.ENDERMAN_HURT
                         , SoundSource.PLAYERS
-                        , 0.5f
+                        , 1f
                         , level.random.nextFloat() * 0.1f + 0.9f);
 
                 player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->

@@ -137,10 +137,9 @@ public class ModEvents
             if(!list.isEmpty()) getClosest(list, event.getEntity()).hurt(DamageSource.MAGIC, event.getAmount());
         }
 
-        if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 7 && standIsActive(player) && !getBomb(player) && !event.getEntity().hasEffect(MobEffects.GLOWING))
+        if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 7 && standIsActive(player) && !getBomb(player) && !event.getEntity().hasCustomName())
         {
-            //event.getEntity().addEffect(new MobEffectInstance(MobEffects.GLOWING, 36000, 0, false, false));
-            event.getEntity().addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 36000, 0, false, false));
+            event.getEntity().addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 36000, 0, false, false, true));
 
             player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
             {
@@ -149,26 +148,17 @@ public class ModEvents
             });
         }
 
-        if(event.getSource().getEntity() instanceof LivingEntity entity && event.getEntity() instanceof ServerPlayer player && getStandID(player) == 8 && standIsActive(player) && player.getFoodData().getFoodLevel() >= 10)
+        if(event.getSource().getEntity() instanceof LivingEntity entity && event.getEntity() instanceof ServerPlayer player && player.hasEffect(ModEffects.EPITAPH.get()))
         {
             player.setXRot(entity.getXRot());
             player.setYRot(entity.getYRot());
             player.moveTo(behindTP(entity, player, 0));
-            player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - 10);
             event.setCanceled(true);
+            if(player.hasEffect(ModEffects.EPITAPH.get())) player.removeEffect(ModEffects.EPITAPH.get());
 
             event.getEntity().getLevel().playSound(null
                     , player.getOnPos()
                     , SoundEvents.ENDERMAN_SCREAM
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
-        }
-        else if(event.getSource().getEntity() instanceof LivingEntity entity && event.getEntity() instanceof ServerPlayer player && getStandID(player) == 8 && standIsActive(player) && player.getFoodData().getFoodLevel() < 10)
-        {
-            event.getEntity().getLevel().playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.FIRE_EXTINGUISH
                     , SoundSource.PLAYERS
                     , 1f
                     , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);

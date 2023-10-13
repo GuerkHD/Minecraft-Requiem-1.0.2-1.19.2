@@ -65,7 +65,7 @@ public class StandC2SPacket
                 player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
                 {
                     stand.activateStand();
-                    if(stand.getStandID() == 2) player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 36000, 0, false, false));
+                    if(stand.getStandID() == 2) player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 36000, 0, false, false, true));
                     ModMessages.sendToPlayer(new StandActiveDataSyncS2CPacket(stand.getStandActive()), player);
                 });
             }

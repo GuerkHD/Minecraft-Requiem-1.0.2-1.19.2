@@ -237,7 +237,17 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 8)
             {
-                player.addEffect(new MobEffectInstance(ModEffects.EPITAPH.get(), 100, 0, false, false));
+                cost = 9;
+
+                if(food >= cost)
+                {
+                    player.addEffect(new MobEffectInstance(ModEffects.EPITAPH.get(), 100, 0, false, false, true));
+                }
+                else
+                {
+                    cost = 0;
+                    standSound(level, player, 8, false);
+                }
             }
             else if(getStandID(player) == 9)
             {
@@ -272,150 +282,82 @@ public class AbilityC2SPacket
 
     private void standSound(ServerLevel level, ServerPlayer player, int ID, boolean success)
     {
+        level.playSound(null
+                , player.getOnPos()
+                , sound(ID, success)
+                , SoundSource.PLAYERS
+                , 1f
+                , level.random.nextFloat() * 0.1f + 0.9f);
+    }
+
+    private SoundEvent sound(int ID, boolean success)
+    {
         if(ID == 0 && success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , ModSounds.ZA_WARUDO.get()
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return ModSounds.ZA_WARUDO.get();
         }
         else if(ID == 0 && !success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.FIRE_EXTINGUISH
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return SoundEvents.FIRE_EXTINGUISH;
         }
         else if(ID == 1 && success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.WARDEN_EMERGE
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return SoundEvents.WARDEN_EMERGE;
         }
         else if(ID == 1 && !success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.WARDEN_DEATH
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return SoundEvents.WARDEN_DEATH;
         }
         else if(ID == 2 && success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.CHICKEN_DEATH
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return SoundEvents.CHICKEN_DEATH;
         }
         else if(ID == 2 && !success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.CHICKEN_AMBIENT
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return SoundEvents.CHICKEN_AMBIENT;
         }
         else if(ID == 3 && success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.ENDER_CHEST_OPEN
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return SoundEvents.ENDER_CHEST_OPEN;
         }
         else if(ID == 3 && !success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.ENDER_CHEST_CLOSE
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return SoundEvents.ENDER_CHEST_CLOSE;
         }
         else if(ID == 4 && success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.BEACON_ACTIVATE
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return SoundEvents.BEACON_ACTIVATE;
         }
         else if(ID == 4 && !success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.BEACON_DEACTIVATE
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return SoundEvents.BEACON_DEACTIVATE;
         }
         else if(ID == 7 && success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.STONE_BUTTON_CLICK_ON
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return SoundEvents.STONE_BUTTON_CLICK_ON;
         }
         else if(ID == 7 && !success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.STONE_BUTTON_CLICK_OFF
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return SoundEvents.STONE_BUTTON_CLICK_OFF;
         }
         else if(ID == 8 && success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.ENDERMAN_TELEPORT
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            //Nothing to see here
         }
         else if(ID == 8 && !success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.ENDERMAN_TELEPORT
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return SoundEvents.FIRE_EXTINGUISH;
         }
         else if(ID == 9 && success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.ENDERMAN_TELEPORT
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return SoundEvents.FIRE_EXTINGUISH;
         }
         else if(ID == 9 && !success)
         {
-            level.playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.ENDERMAN_TELEPORT
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , level.random.nextFloat() * 0.1f + 0.9f);
+            return SoundEvents.FIRE_EXTINGUISH;
         }
+
+        return null;
     }
 
     public void D4C(Level level, LivingEntity livingEntity)

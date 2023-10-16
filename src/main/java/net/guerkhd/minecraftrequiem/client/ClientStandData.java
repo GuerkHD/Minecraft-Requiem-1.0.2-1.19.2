@@ -14,6 +14,7 @@ public class ClientStandData
     //ID 5 = Echos Act 3
     //ID 6 = Highway To Hell
     //ID 7 = Killer Queen
+    //ID 8 = King Crimson
 
     public static boolean getStandUser()
     {

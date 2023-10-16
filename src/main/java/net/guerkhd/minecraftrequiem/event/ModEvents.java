@@ -7,8 +7,13 @@ import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.networking.packet.*;
 import net.guerkhd.minecraftrequiem.stand.PlayerStand;
 import net.guerkhd.minecraftrequiem.stand.PlayerStandProvider;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,6 +27,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -177,7 +184,9 @@ public class ModEvents
             {
                 if(ent.hasEffect(MobEffects.MOVEMENT_SLOWDOWN))
                 {
-                    ent.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 6));
+                    Vec3 pos = event.player.getPosition(1f);
+                    ent.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 6, false, false, false));
+                    //event.player.getLevel().addParticle(ParticleTypes.LAVA, pos.x, pos.y, pos.z, 0, 0.7, 0);
                 }
             }
         }
@@ -219,9 +228,12 @@ public class ModEvents
                 {
                     user = true;
 
-                    //player.sendSystemMessage(Component.literal("Random double: " + random()));
+                    Vec3 vec3 = event.getEntity().getPosition(1f);
 
                     event.getEntity().move(MoverType.SELF, behindMove(player, event.getEntity(), 0.5));
+                    //if(getStandID(player) == 1 || getStandID(player) == 2 || getStandID(player) == 4) event.getEntity().getLevel().addParticle(getParticle(player), vec3.x, vec3.y + player.getEyeHeight(), vec3.z, 0, 0.7, 0);
+
+                    //player.sendSystemMessage(Component.literal("Stand move: " + behindMove(player, event.getEntity(), 0.5)));
 
                     if(tick == 0)
                     {
@@ -276,7 +288,8 @@ public class ModEvents
 
     private static Vec3 behindTP(LivingEntity target, LivingEntity traveler, double yOffset)
     {
-        Vec3 pos = new Vec3(target.getViewVector(3f).x, 0, target.getViewVector(3f).z);
+        Vec3 pos = new Vec3(target.getViewVector(1f).x, 0, target.getViewVector(1f).z);
+        pos = pos.multiply(1.5, 0, 1.5);
         pos = pos.reverse();
         //pos = pos.add(x, 0, z);
         Vec3 play = new Vec3(target.getPosition(1f).x, target.getPosition(1f).y + yOffset, target.getPosition(1f).z);
@@ -288,13 +301,18 @@ public class ModEvents
 
     private static Vec3 behindMove(LivingEntity target, LivingEntity traveler, double yOffset)
     {
-        Vec3 pos = new Vec3(target.getViewVector(3f).x, 0, target.getViewVector(3f).z);
+        Vec3 pos = new Vec3(target.getViewVector(1f).x, 0, target.getViewVector(1f).z);
+        pos = pos.multiply(1.5, 0, 1.5);
         pos = pos.reverse();
         //pos = pos.add(x, 0, z);
         Vec3 play = new Vec3(target.getPosition(1f).x, target.getPosition(1f).y + yOffset, target.getPosition(1f).z);
         pos = play.add(pos);
         pos = pos.subtract(traveler.getPosition(1f));
 
+        if(pos.add(traveler.getPosition(1f)).distanceToSqr(target.getPosition(1f)) < 0.5)
+        {
+            return pos.subtract(0.5, 0, 0.5);
+        }
         return pos;
     }
 
@@ -317,5 +335,16 @@ public class ModEvents
     private static double distance(LivingEntity entity, LivingEntity player)
     {
         return player.position().distanceToSqr(entity.position());
+    }
+
+    private static ParticleOptions getParticle(Player player)
+    {
+        ParticleOptions particle = null;
+
+        if(getStandID(player) == 1) particle = ParticleTypes.REVERSE_PORTAL;
+        else if(getStandID(player) == 2) particle = ParticleTypes.LAVA;
+        else if(getStandID(player) == 4) particle = ParticleTypes.CLOUD;
+
+        return particle;
     }
 }

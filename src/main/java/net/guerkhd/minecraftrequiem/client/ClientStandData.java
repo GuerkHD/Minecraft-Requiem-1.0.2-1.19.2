@@ -6,6 +6,7 @@ public class ClientStandData
     private static boolean standActive;
     private static int standID;
     private static boolean bomb;
+    private static double maxY;
     //ID 0 = The World
     //ID 1 = D4C
     //ID 2 = Magicians Red
@@ -50,5 +51,14 @@ public class ClientStandData
     public static void setBomb(boolean bomb)
     {
         ClientStandData.bomb = bomb;
+    }
+
+    public static double getMaxY()
+    {
+        return maxY;
+    }
+    public static void setMaxY(double maxY)
+    {
+        ClientStandData.maxY = maxY;
     }
 }

@@ -21,6 +21,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.Turtle;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
@@ -209,8 +210,16 @@ public class AbilityC2SPacket
                         if(ent.hasEffect(ModEffects.BOMB.get()))
                         {
                             ent.removeEffect(ModEffects.BOMB.get());
-                            ent.removeEffect(MobEffects.GLOWING);
-                            level.explode(player, ent.getX(), ent.getY()+1, ent.getZ(), 2, Explosion.BlockInteraction.NONE);
+
+                            if(ent.hasCustomName() && ent.getCustomName().getString().equals("Sheer Heart Attack"))
+                            {
+                                level.explode(player, ent.getX(), ent.getY(), ent.getZ(), 3, Explosion.BlockInteraction.BREAK);
+                                ent.remove(Entity.RemovalReason.DISCARDED);
+                            }
+                            else
+                            {
+                                level.explode(player, ent.getX(), ent.getY()+1, ent.getZ(), 2, Explosion.BlockInteraction.NONE);
+                            }
 
                             player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
                             {
@@ -358,6 +367,21 @@ public class AbilityC2SPacket
         }
 
         return null;
+    }
+
+    public Turtle heartAttack(ServerLevel level, Vec3 pos)
+    {
+        Turtle turtle = new Turtle(EntityType.TURTLE, level);
+
+        turtle.setPos(pos);
+        turtle.addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 3600, 0, false, false));
+        turtle.setInvulnerable(true);
+        turtle.setSilent(true);
+        turtle.setNoAi(true);
+        turtle.setCustomName(Component.literal("Sheer Heart Attack"));
+        turtle.setCustomNameVisible(true);
+
+        return turtle;
     }
 
     public void D4C(Level level, LivingEntity livingEntity)

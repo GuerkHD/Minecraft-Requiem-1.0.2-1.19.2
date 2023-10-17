@@ -52,7 +52,7 @@ public class ArrowC2SPacket
                 player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
                 {
                     stand.makeStandUser();
-                    stand.setStandID(RandomSource.createNewThreadLocalInstance().nextInt(9));
+                    stand.setStandID(RandomSource.createNewThreadLocalInstance().nextInt(10));
                     ModMessages.sendToPlayer(new StandUserDataSyncS2CPacket(stand.getStandUser()), player);
                     ModMessages.sendToPlayer(new StandIDDataSyncS2CPacket(stand.getStandID()), player);
 
@@ -94,7 +94,7 @@ public class ArrowC2SPacket
                     }
                     else if(stand.getStandID() == 9)
                     {
-                        player.sendSystemMessage(Component.literal("").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.BLACK));
+                        player.sendSystemMessage(Component.literal("Green Day").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_GREEN));
                     }
                 });
             }

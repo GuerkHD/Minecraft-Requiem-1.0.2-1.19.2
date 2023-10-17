@@ -191,6 +191,28 @@ public class ModEvents
             }
         }
 
+        if(event.player.hasEffect(ModEffects.GREEN_DAY.get()))
+        {
+            double down = getMaxY(event.player) - event.player.getY();
+            int duration = event.player.getEffect(ModEffects.GREEN_DAY.get()).getDuration();
+
+            if(down > 0 && down <= 5)
+            {
+                event.player.removeEffect(ModEffects.GREEN_DAY.get());
+                event.player.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), duration, (int) Math.round(down), true, true, true));
+            }
+            else if(down > 0 && down > 5)
+            {
+                event.player.removeEffect(ModEffects.GREEN_DAY.get());
+                event.player.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), duration, 5, true, true, true));
+            }
+            else if(down <= 0)
+            {
+                event.player.removeEffect(ModEffects.GREEN_DAY.get());
+                event.player.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), duration, 0, true, true, true));
+            }
+        }
+
         //Player List
         if(getStandID(event.player) == 6 && standIsActive(event.player))
         {
@@ -281,6 +303,11 @@ public class ModEvents
         return ClientStandData.getBomb();
     }
 
+    private static double getMaxY(Player player)
+    {
+        return ClientStandData.getMaxY();
+    }
+
     private static double random()
     {
         return RandomSource.createNewThreadLocalInstance().nextDouble();
@@ -311,7 +338,7 @@ public class ModEvents
 
         if(pos.add(traveler.getPosition(1f)).distanceToSqr(target.getPosition(1f)) < 0.5)
         {
-            return pos.subtract(0.5, 0, 0.5);
+            return pos.subtract(0.7, 0, 0.7);
         }
         return pos;
     }

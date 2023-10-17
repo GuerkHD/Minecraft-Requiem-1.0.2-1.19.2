@@ -260,18 +260,31 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 9)
             {
-                List<ServerPlayer> list = level.getEntitiesOfClass(ServerPlayer.class, player.getBoundingBox().inflate(15));
-                list.remove(player);
+                cost = 12;
 
-                for(ServerPlayer play : list)
+                if(food >= cost)
                 {
-                    play.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
-                    {
-                        stand.setMaxY(play.getY());
-                        ModMessages.sendToPlayer(new StandMaxYDataSyncS2CPacket(stand.getMaxY()), play);
-                    });
+                    List<ServerPlayer> list = level.getEntitiesOfClass(ServerPlayer.class, player.getBoundingBox().inflate(15));
+                    //MUSS WIEDER REIN
+                    //list.remove(player);
 
-                    play.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), 100, 0, false, false, true));
+                    for(ServerPlayer play : list)
+                    {
+                        play.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
+                        {
+                            stand.setMaxY(play.getY());
+                            ModMessages.sendToPlayer(new StandMaxYDataSyncS2CPacket(stand.getMaxY()), play);
+                        });
+
+                        play.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), 500, 0, false, false, true));
+                    }
+
+                    standSound(level, player, 9, true);
+                }
+                else
+                {
+                    cost = 0;
+                    standSound(level, player, 9, false);
                 }
             }
 
@@ -361,21 +374,17 @@ public class AbilityC2SPacket
         {
             return SoundEvents.STONE_BUTTON_CLICK_OFF;
         }
-        else if(ID == 8 && success)
-        {
-            //Nothing to see here
-        }
         else if(ID == 8 && !success)
         {
             return SoundEvents.FIRE_EXTINGUISH;
         }
         else if(ID == 9 && success)
         {
-            return SoundEvents.FIRE_EXTINGUISH;
+            return SoundEvents.SPLASH_POTION_BREAK;
         }
         else if(ID == 9 && !success)
         {
-            return SoundEvents.FIRE_EXTINGUISH;
+            return SoundEvents.SAND_PLACE;
         }
 
         return null;

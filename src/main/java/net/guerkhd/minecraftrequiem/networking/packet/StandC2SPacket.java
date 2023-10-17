@@ -145,7 +145,7 @@ public class StandC2SPacket
         else if(getStandID(player) == 6) list.add(DyeItem.byColor(DyeColor.PURPLE));
         else if(getStandID(player) == 7) list.add(DyeItem.byColor(DyeColor.PINK));
         else if(getStandID(player) == 8) list.add(DyeItem.byColor(DyeColor.RED));
-        else if(getStandID(player) == 9) list.add(DyeItem.byColor(DyeColor.BLACK));
+        else if(getStandID(player) == 9) list.add(DyeItem.byColor(DyeColor.GREEN));
 
         return list;
     }

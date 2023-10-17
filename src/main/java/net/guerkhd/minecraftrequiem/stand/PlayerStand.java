@@ -9,6 +9,7 @@ public class PlayerStand
     private boolean standActive = false;
     private int standID;
     private boolean bomb;
+    private double maxY;
     //ID 0 = The World
     //ID 1 = D4C
     //ID 2 = Magicians Red
@@ -63,12 +64,22 @@ public class PlayerStand
         this.bomb = bomb;
     }
 
+    public double getMaxY()
+    {
+        return maxY;
+    }
+    public void setMaxY(double maxY)
+    {
+        this.maxY = maxY;
+    }
+
     public void copyFrom(PlayerStand source)
     {
         this.standUser = source.standUser;
         this.standActive = source.standActive;
         this.standID = source.standID;
         this.bomb = source.bomb;
+        this.maxY = source.maxY;
     }
 
     public void saveNBTData(CompoundTag nbt)
@@ -77,6 +88,7 @@ public class PlayerStand
         nbt.putBoolean("standActive", standActive);
         nbt.putInt("standID", standID);
         nbt.putBoolean("bomb", bomb);
+        nbt.putDouble("maxY", maxY);
     }
 
     public void loadNBTData(CompoundTag nbt)
@@ -85,5 +97,6 @@ public class PlayerStand
         standActive = nbt.getBoolean("standActive");
         standID = nbt.getInt("standID");
         bomb = nbt.getBoolean("bomb");
+        maxY = nbt.getDouble("maxY");
     }
 }

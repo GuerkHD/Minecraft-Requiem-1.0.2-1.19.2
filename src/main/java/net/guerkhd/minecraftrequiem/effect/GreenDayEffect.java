@@ -18,7 +18,7 @@ public class GreenDayEffect extends MobEffect
     {
         if(!plivingEntity.level.isClientSide())
         {
-            plivingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 20, pAmplifier));
+            if(pAmplifier > 0) plivingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 20, pAmplifier-1));
         }
         super.applyEffectTick(plivingEntity, pAmplifier);
     }

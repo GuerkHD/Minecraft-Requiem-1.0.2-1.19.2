@@ -251,7 +251,19 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 9)
             {
+                List<ServerPlayer> list = level.getEntitiesOfClass(ServerPlayer.class, player.getBoundingBox().inflate(15));
+                list.remove(player);
 
+                for(ServerPlayer play : list)
+                {
+                    play.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
+                    {
+                        stand.setMaxY(play.getY());
+                        ModMessages.sendToPlayer(new StandMaxYDataSyncS2CPacket(stand.getMaxY()), play);
+                    });
+
+                    play.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), 100, 0, false, false, true));
+                }
             }
 
             if(player.gameMode.isSurvival()) player.getFoodData().setFoodLevel(food - cost);

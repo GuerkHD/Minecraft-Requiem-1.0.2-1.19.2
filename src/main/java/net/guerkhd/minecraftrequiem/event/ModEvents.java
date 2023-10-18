@@ -26,6 +26,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
@@ -240,7 +241,7 @@ public class ModEvents
             event.getEntity().removeEffect(ModEffects.BOMB.get());
         }
 
-        if(event.getEntity().hasCustomName())
+        if(event.getEntity().hasCustomName() && event.getEntity() instanceof Zombie)
         {
             event.getEntity().clearFire();
 

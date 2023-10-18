@@ -1,5 +1,6 @@
 package net.guerkhd.minecraftrequiem.networking.packet;
 
+import net.guerkhd.minecraftrequiem.client.ClientStandData;
 import net.guerkhd.minecraftrequiem.effect.ModEffects;
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.sound.ModSounds;
@@ -200,48 +201,14 @@ public class AbilityC2SPacket
             {
                 cost = 7;
 
-                if(food >= cost)
+                if(!player.isCrouching())
                 {
-                    standSound(level, player, 7, true);
-                    List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(50));
-
-                    for(LivingEntity ent : list)
-                    {
-                        if(ent.hasEffect(ModEffects.BOMB.get()))
-                        {
-                            ent.removeEffect(ModEffects.BOMB.get());
-
-                            if(ent.hasCustomName() && ent.getCustomName().getString().equals("Sheer Heart Attack"))
-                            {
-                                level.explode(player, ent.getX(), ent.getY(), ent.getZ(), 3, Explosion.BlockInteraction.BREAK);
-                                ent.remove(Entity.RemovalReason.DISCARDED);
-                            }
-                            else
-                            {
-                                level.explode(player, ent.getX(), ent.getY()+1, ent.getZ(), 2, Explosion.BlockInteraction.NONE);
-                            }
-
-                            player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
-                            {
-                                stand.setBomb(false);
-                                ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
-                            });
-                        }
-                    }
-
-                    player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
-                    {
-                        if(stand.getBomb())
-                        {
-                            stand.setBomb(false);
-                            ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
-                        }
-                    });
+                    cost = bomb(level, player, food, cost);
                 }
-                else
+                else if(!ClientStandData.getBomb())
                 {
+                    spawnHeartAttack(level, player);
                     cost = 0;
-                    standSound(level, player, 7, false);
                 }
             }
             else if(getStandID(player) == 8)
@@ -390,6 +357,61 @@ public class AbilityC2SPacket
         return null;
     }
 
+    public int bomb(ServerLevel level, ServerPlayer player, int food, int cost)
+    {
+        if(food >= cost)
+        {
+            standSound(level, player, 7, true);
+            List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(50));
+
+            for(LivingEntity ent : list)
+            {
+                if(ent.hasEffect(ModEffects.BOMB.get()))
+                {
+                    ent.removeEffect(ModEffects.BOMB.get());
+
+                    if(ent.hasCustomName() && ent.getCustomName().getString().equals("Sheer Heart Attack"))
+                    {
+                        level.explode(player, ent.getX(), ent.getY(), ent.getZ(), 3, Explosion.BlockInteraction.BREAK);
+                        ent.remove(Entity.RemovalReason.DISCARDED);
+                    }
+                    else
+                    {
+                        level.explode(player, ent.getX(), ent.getY()+1, ent.getZ(), 2, Explosion.BlockInteraction.NONE);
+                    }
+                }
+            }
+
+            player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
+            {
+                if(stand.getBomb())
+                {
+                    stand.setBomb(false);
+                    ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
+                }
+            });
+        }
+        else
+        {
+            cost = 0;
+            standSound(level, player, 7, false);
+        }
+
+        return cost;
+    }
+
+    public void spawnHeartAttack(ServerLevel level, ServerPlayer player)
+    {
+        Turtle heartAttack = heartAttack(level, inFront(player));
+        level.addFreshEntity(heartAttack);
+
+        player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
+        {
+            stand.setBomb(true);
+            ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
+        });
+    }
+
     public Turtle heartAttack(ServerLevel level, Vec3 pos)
     {
         Turtle turtle = new Turtle(EntityType.TURTLE, level);
@@ -403,6 +425,16 @@ public class AbilityC2SPacket
         turtle.setCustomNameVisible(true);
 
         return turtle;
+    }
+
+    private Vec3 inFront(ServerPlayer player)
+    {
+        Vec3 view = player.getViewVector(1f);
+        view = view.multiply(1.5, 0, 1.5);
+        Vec3 pos = player.getPosition(1f);
+        pos = pos.add(view);
+
+        return pos;
     }
 
     public void D4C(Level level, LivingEntity livingEntity)

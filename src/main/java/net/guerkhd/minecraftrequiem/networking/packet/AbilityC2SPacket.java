@@ -201,14 +201,14 @@ public class AbilityC2SPacket
             {
                 cost = 7;
 
-                if(!player.isCrouching())
-                {
-                    cost = bomb(level, player, food, cost);
-                }
-                else if(!ClientStandData.getBomb())
+                if(player.isCrouching() && !getBomb(player))
                 {
                     spawnHeartAttack(level, player);
                     cost = 0;
+                }
+                else
+                {
+                    cost = bomb(level, player, food, cost);
                 }
             }
             else if(getStandID(player) == 8)
@@ -281,6 +281,13 @@ public class AbilityC2SPacket
                 .orElse(10);
     }
 
+    private boolean getBomb(ServerPlayer player)
+    {
+        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
+                .map(stand -> { return stand.getBomb(); })
+                .orElse(false);
+    }
+
     private void standSound(ServerLevel level, ServerPlayer player, int ID, boolean success)
     {
         level.playSound(null
@@ -293,66 +300,21 @@ public class AbilityC2SPacket
 
     private SoundEvent sound(int ID, boolean success)
     {
-        if(ID == 0 && success)
-        {
-            return ModSounds.ZA_WARUDO.get();
-        }
-        else if(ID == 0 && !success)
-        {
-            return SoundEvents.FIRE_EXTINGUISH;
-        }
-        else if(ID == 1 && success)
-        {
-            return SoundEvents.WARDEN_EMERGE;
-        }
-        else if(ID == 1 && !success)
-        {
-            return SoundEvents.WARDEN_DEATH;
-        }
-        else if(ID == 2 && success)
-        {
-            return SoundEvents.CHICKEN_DEATH;
-        }
-        else if(ID == 2 && !success)
-        {
-            return SoundEvents.CHICKEN_AMBIENT;
-        }
-        else if(ID == 3 && success)
-        {
-            return SoundEvents.ENDER_CHEST_OPEN;
-        }
-        else if(ID == 3 && !success)
-        {
-            return SoundEvents.ENDER_CHEST_CLOSE;
-        }
-        else if(ID == 4 && success)
-        {
-            return SoundEvents.BEACON_ACTIVATE;
-        }
-        else if(ID == 4 && !success)
-        {
-            return SoundEvents.BEACON_DEACTIVATE;
-        }
-        else if(ID == 7 && success)
-        {
-            return SoundEvents.STONE_BUTTON_CLICK_ON;
-        }
-        else if(ID == 7 && !success)
-        {
-            return SoundEvents.STONE_BUTTON_CLICK_OFF;
-        }
-        else if(ID == 8 && !success)
-        {
-            return SoundEvents.FIRE_EXTINGUISH;
-        }
-        else if(ID == 9 && success)
-        {
-            return SoundEvents.SPLASH_POTION_BREAK;
-        }
-        else if(ID == 9 && !success)
-        {
-            return SoundEvents.SAND_PLACE;
-        }
+        if(ID == 0 && success) return ModSounds.ZA_WARUDO.get();
+        else if(ID == 0 && !success) return SoundEvents.FIRE_EXTINGUISH;
+        else if(ID == 1 && success) return SoundEvents.WARDEN_EMERGE;
+        else if(ID == 1 && !success) return SoundEvents.WARDEN_DEATH;
+        else if(ID == 2 && success) return SoundEvents.CHICKEN_DEATH;
+        else if(ID == 2 && !success) return SoundEvents.CHICKEN_AMBIENT;
+        else if(ID == 3 && success) return SoundEvents.ENDER_CHEST_OPEN;
+        else if(ID == 3 && !success) return SoundEvents.ENDER_CHEST_CLOSE;
+        else if(ID == 4 && success) return SoundEvents.BEACON_ACTIVATE;
+        else if(ID == 4 && !success) return SoundEvents.BEACON_DEACTIVATE;
+        else if(ID == 7 && success) return SoundEvents.STONE_BUTTON_CLICK_ON;
+        else if(ID == 7 && !success) return SoundEvents.STONE_BUTTON_CLICK_OFF;
+        else if(ID == 8 && !success) return SoundEvents.FIRE_EXTINGUISH;
+        else if(ID == 9 && success) return SoundEvents.SPLASH_POTION_BREAK;
+        else if(ID == 9 && !success) return SoundEvents.SAND_PLACE;
 
         return null;
     }
@@ -417,6 +379,7 @@ public class AbilityC2SPacket
         Turtle turtle = new Turtle(EntityType.TURTLE, level);
 
         turtle.setPos(pos);
+        turtle.setBaby(true);
         turtle.addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 3600, 0, false, false));
         turtle.setInvulnerable(true);
         turtle.setSilent(true);
@@ -430,7 +393,7 @@ public class AbilityC2SPacket
     private Vec3 inFront(ServerPlayer player)
     {
         Vec3 view = player.getViewVector(1f);
-        view = view.multiply(1.5, 0, 1.5);
+        view = view.multiply(2, 0, 2);
         Vec3 pos = player.getPosition(1f);
         pos = pos.add(view);
 

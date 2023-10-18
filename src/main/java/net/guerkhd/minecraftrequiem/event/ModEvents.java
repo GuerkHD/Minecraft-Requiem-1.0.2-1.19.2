@@ -26,6 +26,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.animal.Turtle;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -239,6 +240,10 @@ public class ModEvents
         {
             //event.getEntity().removeEffect(MobEffects.GLOWING);
             event.getEntity().removeEffect(ModEffects.BOMB.get());
+            if(event.getEntity() instanceof Turtle turtle && turtle.hasCustomName() && turtle.getCustomName().getString().equals("Sheer Heart Attack"))
+            {
+                turtle.remove(Entity.RemovalReason.DISCARDED);
+            }
         }
 
         if(event.getEntity().hasCustomName() && event.getEntity() instanceof Zombie)

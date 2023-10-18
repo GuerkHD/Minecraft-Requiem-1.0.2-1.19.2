@@ -321,7 +321,7 @@ public class ModEvents
 
     private static Vec3 behindTP(LivingEntity target, LivingEntity traveler, double yOffset)
     {
-        Vec3 pos = new Vec3(target.getViewVector(1f).x, 0, target.getViewVector(1f).z);
+        Vec3 pos = target.getViewVector(1f);
         pos = pos.multiply(1.5, 0, 1.5);
         pos = pos.reverse();
         //pos = pos.add(x, 0, z);
@@ -334,7 +334,7 @@ public class ModEvents
 
     private static Vec3 behindMove(LivingEntity target, LivingEntity traveler, double yOffset)
     {
-        Vec3 pos = new Vec3(target.getViewVector(1f).x, 0, target.getViewVector(1f).z);
+        Vec3 pos = target.getViewVector(1f);
         pos = pos.multiply(1.5, 0, 1.5);
         pos = pos.reverse();
         //pos = pos.add(x, 0, z);

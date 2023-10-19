@@ -172,7 +172,7 @@ public class ModEvents
         if(getStandID(event.player) == 5 && standIsActive(event.player))
         {
             List<LivingEntity> list3F = event.player.getLevel().getEntitiesOfClass(LivingEntity.class, event.player.getBoundingBox().inflate(5));
-            //list3F.remove(event.player);
+            list3F.remove(event.player);
 
             for(LivingEntity ent : list3F)
             {

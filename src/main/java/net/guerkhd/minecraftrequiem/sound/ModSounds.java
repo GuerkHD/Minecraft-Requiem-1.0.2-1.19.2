@@ -15,6 +15,16 @@ public class ModSounds
 
     public static final RegistryObject<SoundEvent> ZA_WARUDO =
             registerSoundEvent("za_warudo");
+    public static final RegistryObject<SoundEvent> C_MOON =
+            registerSoundEvent("c_moon");
+    public static final RegistryObject<SoundEvent> STAND_SUMMON =
+            registerSoundEvent("stand_summon");
+    public static final RegistryObject<SoundEvent> KING_CRIMSON =
+            registerSoundEvent("king_crimson");
+    public static final RegistryObject<SoundEvent> KILLER_QUEEN =
+            registerSoundEvent("killer_queen");
+    public static final RegistryObject<SoundEvent> THREE_FREEZE =
+            registerSoundEvent("three_freeze");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name)
     {

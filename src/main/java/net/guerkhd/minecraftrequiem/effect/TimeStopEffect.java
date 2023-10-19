@@ -4,9 +4,9 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 
-public class FreezeEffect extends MobEffect
+public class TimeStopEffect extends MobEffect
 {
-    public FreezeEffect(MobEffectCategory mobEffectCategory, int color)
+    public TimeStopEffect(MobEffectCategory mobEffectCategory, int color)
     {
         super(mobEffectCategory, color);
     }

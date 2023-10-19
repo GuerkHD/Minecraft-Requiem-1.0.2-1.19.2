@@ -1,4 +1,34 @@
 {
+  "three_freeze": {
+    "subtitle": "sounds.minecraftrequiem.three_freeze",
+    "sounds": [
+      "minecraftrequiem:three_freeze"
+    ]
+  },
+  "c_moon": {
+    "subtitle": "sounds.minecraftrequiem.c_moon",
+    "sounds": [
+      "minecraftrequiem:c_moon"
+    ]
+  },
+  "killer_queen": {
+    "subtitle": "sounds.minecraftrequiem.killer_queen",
+    "sounds": [
+      "minecraftrequiem:killer_queen"
+    ]
+  },
+  "king_crimson": {
+    "subtitle": "sounds.minecraftrequiem.king_crimson",
+    "sounds": [
+      "minecraftrequiem:king_crimson"
+    ]
+  },
+  "stand_summon": {
+    "subtitle": "sounds.minecraftrequiem.stand_summon",
+    "sounds": [
+      "minecraftrequiem:stand_summon"
+    ]
+  },
   "za_warudo": {
     "subtitle": "sounds.minecraftrequiem.za_warudo",
     "sounds": [

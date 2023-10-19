@@ -16,11 +16,17 @@
   "key.minecraftrequiem.summon_stand": "Summon Stand",
   "key.minecraftrequiem.stand_ability": "Stand Ability",
 
-  "effect.minecraftrequiem.freeze": "Time Stop",
+  "effect.minecraftrequiem.time_stop": "Time Stop",
   "effect.minecraftrequiem.bomb": "Bomb",
   "effect.minecraftrequiem.epitaph": "Epitaph",
   "effect.minecraftrequiem.green_day": "Green Day",
+  "effect.minecraftrequiem.three_freeze": "Three Freeze",
 
+  "sounds.minecraftrequiem.three_freeze": "Three Freeze",
+  "sounds.minecraftrequiem.c_moon": "C-Moon",
+  "sounds.minecraftrequiem.killer_queen": "Killer Queen",
+  "sounds.minecraftrequiem.king_crimson": "King Crimson",
+  "sounds.minecraftrequiem.stand_summon": "Stand",
   "sounds.minecraftrequiem.za_warudo": "Za Warudo",
 
   "itemGroup.minecraftrequiemtab": "Minecraft Requiem"

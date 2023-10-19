@@ -1,6 +1,7 @@
 package net.guerkhd.minecraftrequiem.networking.packet;
 
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
+import net.guerkhd.minecraftrequiem.sound.ModSounds;
 import net.guerkhd.minecraftrequiem.stand.PlayerStandProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -57,7 +58,7 @@ public class StandC2SPacket
 
                 level.playSound(null
                         , player.getOnPos()
-                        , SoundEvents.ENDERMAN_TELEPORT
+                        , ModSounds.STAND_SUMMON.get()
                         , SoundSource.PLAYERS
                         , 1f
                         , level.random.nextFloat() * 0.1f + 0.9f);
@@ -73,7 +74,7 @@ public class StandC2SPacket
             {
                 level.playSound(null
                         , player.getOnPos()
-                        , SoundEvents.ENDERMAN_HURT
+                        , SoundEvents.ENDERMAN_TELEPORT
                         , SoundSource.PLAYERS
                         , 1f
                         , level.random.nextFloat() * 0.1f + 0.9f);

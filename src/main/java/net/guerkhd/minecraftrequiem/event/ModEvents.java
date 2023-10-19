@@ -5,6 +5,7 @@ import net.guerkhd.minecraftrequiem.client.ClientStandData;
 import net.guerkhd.minecraftrequiem.effect.ModEffects;
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.networking.packet.*;
+import net.guerkhd.minecraftrequiem.sound.ModSounds;
 import net.guerkhd.minecraftrequiem.stand.PlayerStand;
 import net.guerkhd.minecraftrequiem.stand.PlayerStandProvider;
 import net.minecraft.client.particle.Particle;
@@ -118,20 +119,11 @@ public class ModEvents
     {
         if(event.getSource().getEntity() instanceof Player player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() >= 12 && !event.getEntity().hasCustomName())
         {
-            event.getEntity().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 6));
+            event.getEntity().addEffect(new MobEffectInstance(ModEffects.THREE_FREEZE.get(), 20, 0, false, false, true));
             player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - 12);
             event.getEntity().getLevel().playSound(null
                     , player.getOnPos()
-                    , SoundEvents.ANVIL_PLACE
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
-        }
-        else if(event.getSource().getEntity() instanceof Player player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() < 12 && !event.getEntity().hasCustomName())
-        {
-            event.getEntity().getLevel().playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.ANVIL_FALL
+                    , ModSounds.THREE_FREEZE.get()
                     , SoundSource.PLAYERS
                     , 1f
                     , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
@@ -167,7 +159,7 @@ public class ModEvents
 
             event.getEntity().getLevel().playSound(null
                     , player.getOnPos()
-                    , SoundEvents.ENDERMAN_SCREAM
+                    , ModSounds.KING_CRIMSON.get()
                     , SoundSource.PLAYERS
                     , 1f
                     , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
@@ -180,14 +172,14 @@ public class ModEvents
         if(getStandID(event.player) == 5 && standIsActive(event.player))
         {
             List<LivingEntity> list3F = event.player.getLevel().getEntitiesOfClass(LivingEntity.class, event.player.getBoundingBox().inflate(5));
-            list3F.remove(event.player);
+            //list3F.remove(event.player);
 
             for(LivingEntity ent : list3F)
             {
-                if(ent.hasEffect(MobEffects.MOVEMENT_SLOWDOWN))
+                if(ent.hasEffect(ModEffects.THREE_FREEZE.get()))
                 {
-                    Vec3 pos = event.player.getPosition(1f);
-                    ent.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 6, false, false, false));
+                    //Vec3 pos = event.player.getPosition(1f);
+                    ent.addEffect(new MobEffectInstance(ModEffects.THREE_FREEZE.get(), 20, 0, false, false, true));
                     //event.player.getLevel().addParticle(ParticleTypes.LAVA, pos.x, pos.y, pos.z, 0, 0.7, 0);
                 }
             }

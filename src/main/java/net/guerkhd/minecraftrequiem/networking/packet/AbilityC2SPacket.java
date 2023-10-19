@@ -86,7 +86,7 @@ public class AbilityC2SPacket
 
                     for(LivingEntity ent : list)
                     {
-                        if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(ModEffects.FREEZE.get(), 20, 0, false, false));
+                        if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(ModEffects.TIME_STOP.get(), 20, 0, false, false));
                     }
                 }
                 else
@@ -306,12 +306,11 @@ public class AbilityC2SPacket
         else if(ID == 1 && !success) return SoundEvents.WARDEN_DEATH;
         else if(ID == 2 && success) return SoundEvents.CHICKEN_DEATH;
         else if(ID == 2 && !success) return SoundEvents.CHICKEN_AMBIENT;
-        else if(ID == 3 && success) return SoundEvents.ENDER_CHEST_OPEN;
+        else if(ID == 3 && success) return ModSounds.C_MOON.get();
         else if(ID == 3 && !success) return SoundEvents.ENDER_CHEST_CLOSE;
         else if(ID == 4 && success) return SoundEvents.BEACON_ACTIVATE;
         else if(ID == 4 && !success) return SoundEvents.BEACON_DEACTIVATE;
-        else if(ID == 7 && success) return SoundEvents.STONE_BUTTON_CLICK_ON;
-        else if(ID == 7 && !success) return SoundEvents.STONE_BUTTON_CLICK_OFF;
+        else if(ID == 7 && success) return ModSounds.KILLER_QUEEN.get();
         else if(ID == 8 && !success) return SoundEvents.FIRE_EXTINGUISH;
         else if(ID == 9 && success) return SoundEvents.SPLASH_POTION_BREAK;
         else if(ID == 9 && !success) return SoundEvents.SAND_PLACE;
@@ -321,9 +320,10 @@ public class AbilityC2SPacket
 
     public int bomb(ServerLevel level, ServerPlayer player, int food, int cost)
     {
+        standSound(level, player, 7, true);
+
         if(food >= cost)
         {
-            standSound(level, player, 7, true);
             List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(50));
 
             for(LivingEntity ent : list)
@@ -356,7 +356,6 @@ public class AbilityC2SPacket
         else
         {
             cost = 0;
-            standSound(level, player, 7, false);
         }
 
         return cost;

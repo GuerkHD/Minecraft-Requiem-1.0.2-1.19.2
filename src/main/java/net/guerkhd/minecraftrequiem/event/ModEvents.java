@@ -17,27 +17,35 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.animal.Turtle;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
+import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -117,13 +125,22 @@ public class ModEvents
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event)
     {
-        if(event.getSource().getEntity() instanceof Player player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() >= 12 && !event.getEntity().hasCustomName())
+        if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() >= 12 && !isStand(player, event.getEntity()))
         {
             event.getEntity().addEffect(new MobEffectInstance(ModEffects.THREE_FREEZE.get(), 20, 0, false, false, true));
-            player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - 12);
+            if(player.gameMode.isSurvival()) player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - 12);
             event.getEntity().getLevel().playSound(null
                     , player.getOnPos()
                     , ModSounds.THREE_FREEZE.get()
+                    , SoundSource.PLAYERS
+                    , 1f
+                    , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() < 12 && !isStand(player, event.getEntity()))
+        {
+            event.getEntity().getLevel().playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.PLAYER_BURP
                     , SoundSource.PLAYERS
                     , 1f
                     , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
@@ -154,6 +171,7 @@ public class ModEvents
             player.setXRot(entity.getXRot());
             player.setYRot(entity.getYRot());
             player.moveTo(behindTP(entity, player, 0));
+            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 40, 1, false, false, false));
             event.setCanceled(true);
             if(player.hasEffect(ModEffects.EPITAPH.get())) player.removeEffect(ModEffects.EPITAPH.get());
 
@@ -309,6 +327,12 @@ public class ModEvents
     private static double random()
     {
         return RandomSource.createNewThreadLocalInstance().nextDouble();
+    }
+
+    private static boolean isStand(ServerPlayer player, LivingEntity entity)
+    {
+        if(entity.hasCustomName() && entity.getCustomName().equals(player.getName())) return true;
+        else return false;
     }
 
     private static Vec3 behindTP(LivingEntity target, LivingEntity traveler, double yOffset)

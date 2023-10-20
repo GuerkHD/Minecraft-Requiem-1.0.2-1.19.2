@@ -19,12 +19,16 @@ public class ModSounds
             registerSoundEvent("c_moon");
     public static final RegistryObject<SoundEvent> STAND_SUMMON =
             registerSoundEvent("stand_summon");
+    public static final RegistryObject<SoundEvent> STAND_UNSUMMON =
+            registerSoundEvent("stand_unsummon");
     public static final RegistryObject<SoundEvent> KING_CRIMSON =
             registerSoundEvent("king_crimson");
     public static final RegistryObject<SoundEvent> KILLER_QUEEN =
             registerSoundEvent("killer_queen");
     public static final RegistryObject<SoundEvent> THREE_FREEZE =
             registerSoundEvent("three_freeze");
+    public static final RegistryObject<SoundEvent> GREEN_DAY =
+            registerSoundEvent("green_day");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name)
     {

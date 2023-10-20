@@ -26,8 +26,10 @@
   "sounds.minecraftrequiem.c_moon": "C-Moon",
   "sounds.minecraftrequiem.killer_queen": "Killer Queen",
   "sounds.minecraftrequiem.king_crimson": "King Crimson",
-  "sounds.minecraftrequiem.stand_summon": "Stand",
+  "sounds.minecraftrequiem.stand_summon": "Stand Summon",
+  "sounds.minecraftrequiem.stand_unsummon": "Stand Unsummon",
   "sounds.minecraftrequiem.za_warudo": "Za Warudo",
+  "sounds.minecraftrequiem.green_day": "Green Day",
 
   "itemGroup.minecraftrequiemtab": "Minecraft Requiem"
 }

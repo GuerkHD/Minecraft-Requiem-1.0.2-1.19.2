@@ -29,6 +29,18 @@
       "minecraftrequiem:stand_summon"
     ]
   },
+  "stand_unsummon": {
+    "subtitle": "sounds.minecraftrequiem.stand_unsummon",
+    "sounds": [
+      "minecraftrequiem:stand_unsummon"
+    ]
+  },
+  "green_day": {
+    "subtitle": "sounds.minecraftrequiem.green_day",
+    "sounds": [
+      "minecraftrequiem:green_day"
+    ]
+  },
   "za_warudo": {
     "subtitle": "sounds.minecraftrequiem.za_warudo",
     "sounds": [

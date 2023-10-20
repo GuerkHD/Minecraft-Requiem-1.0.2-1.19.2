@@ -86,7 +86,7 @@ public class AbilityC2SPacket
 
                     for(LivingEntity ent : list)
                     {
-                        if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(ModEffects.TIME_STOP.get(), 20, 0, false, false));
+                        if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(ModEffects.TIME_STOP.get(), 20, 0, false, false, true));
                     }
                 }
                 else
@@ -144,7 +144,7 @@ public class AbilityC2SPacket
 
                     for(LivingEntity ent : list)
                     {
-                        if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 40, 9));
+                        if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 40, 9, false, false, false));
                     }
                 }
                 else
@@ -232,8 +232,7 @@ public class AbilityC2SPacket
                 if(food >= cost)
                 {
                     List<ServerPlayer> list = level.getEntitiesOfClass(ServerPlayer.class, player.getBoundingBox().inflate(15));
-                    //MUSS WIEDER REIN
-                    //list.remove(player);
+                    list.remove(player);
 
                     for(ServerPlayer play : list)
                     {
@@ -300,20 +299,14 @@ public class AbilityC2SPacket
 
     private SoundEvent sound(int ID, boolean success)
     {
-        if(ID == 0 && success) return ModSounds.ZA_WARUDO.get();
-        else if(ID == 0 && !success) return SoundEvents.FIRE_EXTINGUISH;
-        else if(ID == 1 && success) return SoundEvents.WARDEN_EMERGE;
-        else if(ID == 1 && !success) return SoundEvents.WARDEN_DEATH;
-        else if(ID == 2 && success) return SoundEvents.CHICKEN_DEATH;
-        else if(ID == 2 && !success) return SoundEvents.CHICKEN_AMBIENT;
-        else if(ID == 3 && success) return ModSounds.C_MOON.get();
-        else if(ID == 3 && !success) return SoundEvents.ENDER_CHEST_CLOSE;
-        else if(ID == 4 && success) return SoundEvents.BEACON_ACTIVATE;
-        else if(ID == 4 && !success) return SoundEvents.BEACON_DEACTIVATE;
-        else if(ID == 7 && success) return ModSounds.KILLER_QUEEN.get();
-        else if(ID == 8 && !success) return SoundEvents.FIRE_EXTINGUISH;
-        else if(ID == 9 && success) return SoundEvents.SPLASH_POTION_BREAK;
-        else if(ID == 9 && !success) return SoundEvents.SAND_PLACE;
+        if(!success) return SoundEvents.PLAYER_BURP;
+        else if(ID == 0) return ModSounds.ZA_WARUDO.get();
+        else if(ID == 1) return SoundEvents.WARDEN_EMERGE;
+        else if(ID == 2) return SoundEvents.CHICKEN_DEATH;
+        else if(ID == 3) return ModSounds.C_MOON.get();
+        else if(ID == 4) return SoundEvents.BEACON_ACTIVATE;
+        else if(ID == 7) return ModSounds.KILLER_QUEEN.get();
+        else if(ID == 9) return ModSounds.GREEN_DAY.get();
 
         return null;
     }
@@ -356,6 +349,7 @@ public class AbilityC2SPacket
         else
         {
             cost = 0;
+            standSound(level, player, 7, false);
         }
 
         return cost;

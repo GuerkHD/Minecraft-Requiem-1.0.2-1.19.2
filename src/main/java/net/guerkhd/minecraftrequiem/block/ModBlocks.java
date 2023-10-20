@@ -52,6 +52,11 @@ public class ModBlocks
                     .Properties.of(Material.STONE)
                     .strength(6f)
                     .requiresCorrectToolForDrops()), ModCreativeModeTab.MINECRAFTREQUIEM_TAB);
+    public static final RegistryObject<Block> GOLD_INFUSED_OBSIDIAN = registerBlock("gold_infused_obsidian",
+            () -> new Block(BlockBehaviour
+                    .Properties.of(Material.STONE)
+                    .strength(30f)
+                    .requiresCorrectToolForDrops()), ModCreativeModeTab.MINECRAFTREQUIEM_TAB);
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab)
     {

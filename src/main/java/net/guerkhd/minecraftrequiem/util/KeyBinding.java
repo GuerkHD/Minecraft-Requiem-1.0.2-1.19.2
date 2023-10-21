@@ -14,5 +14,5 @@ public class KeyBinding
     public static final KeyMapping SUMMONING_KEY = new KeyMapping(KEY_SUMMON_STAND, KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, KEY_CATEGORY_STAND);
     public static final KeyMapping ABILITY_KEY = new KeyMapping(KEY_STAND_ABILITY, KeyConflictContext.IN_GAME,
-            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, KEY_CATEGORY_STAND);
+            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, KEY_CATEGORY_STAND);
 }

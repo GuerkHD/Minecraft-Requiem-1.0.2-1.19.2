@@ -23,6 +23,8 @@ public class ModEffects
             () -> new ThreeFreezeEffect(MobEffectCategory.HARMFUL, 0));
     public static final RegistryObject<MobEffect> EPITAPH = MOB_EFFECTS.register("epitaph",
             () -> new KCEffect(MobEffectCategory.BENEFICIAL, 0));
+    public static final RegistryObject<MobEffect> CONSTIPATION = MOB_EFFECTS.register("constipation",
+            () -> new KCEffect(MobEffectCategory.BENEFICIAL, 0));
 
 
     public static void register(IEventBus eventBus)

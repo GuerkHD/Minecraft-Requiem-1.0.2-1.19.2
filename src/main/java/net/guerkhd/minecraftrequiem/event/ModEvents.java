@@ -47,6 +47,7 @@ import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.EntityLeaveLevelEvent;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -287,6 +288,15 @@ public class ModEvents
 
         tick++;
         if(tick >= 20) tick = 0;
+    }
+
+    @SubscribeEvent
+    public static void onPlayerEat(LivingEntityUseItemEvent event)
+    {
+        if(event.getEntity() instanceof Player player && player.hasEffect(ModEffects.CONSTIPATION.get()) && event.getItem().isEdible())
+        {
+            event.setCanceled(true);
+        }
     }
 
     private static int getStandID(Player player)

@@ -1,6 +1,7 @@
 package net.guerkhd.minecraftrequiem.block;
 
 import net.guerkhd.minecraftrequiem.MinecraftRequiem;
+import net.guerkhd.minecraftrequiem.effect.ModEffects;
 import net.guerkhd.minecraftrequiem.item.ModCreativeModeTab;
 import net.guerkhd.minecraftrequiem.item.ModItems;
 import net.minecraft.network.chat.Component;
@@ -82,6 +83,7 @@ public class ModBlocks
         public static final FoodProperties GUERK_BLOCK = new FoodProperties.Builder()
                 .nutrition(20)
                 .saturationMod(1.8f)
+                .effect(() -> new MobEffectInstance(ModEffects.CONSTIPATION.get(), 300, 0, false, false, true), 0.8f)
                 .build();
 
         public static final FoodProperties GUERK_ORE = new FoodProperties.Builder()

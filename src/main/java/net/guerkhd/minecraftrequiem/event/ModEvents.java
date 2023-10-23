@@ -27,6 +27,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -276,7 +277,7 @@ public class ModEvents
             }
         }
 
-        if(event.getEntity().hasCustomName() && event.getEntity() instanceof Zombie)
+        if(event.getEntity().hasCustomName() && event.getEntity() instanceof Zombie && event.getEntity().hasEffect(MobEffects.INVISIBILITY))
         {
             event.getEntity().clearFire();
 

@@ -3,11 +3,13 @@ package net.guerkhd.minecraftrequiem.event;
 import net.guerkhd.minecraftrequiem.MinecraftRequiem;
 import net.guerkhd.minecraftrequiem.client.ClientStandData;
 import net.guerkhd.minecraftrequiem.effect.ModEffects;
+import net.guerkhd.minecraftrequiem.item.ModItems;
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.networking.packet.*;
 import net.guerkhd.minecraftrequiem.sound.ModSounds;
 import net.guerkhd.minecraftrequiem.stand.PlayerStand;
 import net.guerkhd.minecraftrequiem.stand.PlayerStandProvider;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,8 +36,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.animal.Turtle;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
@@ -50,9 +51,11 @@ import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.List;
 
@@ -124,8 +127,24 @@ public class ModEvents
     }
 
     @SubscribeEvent
+    public static void onTooltip(ItemTooltipEvent event)
+    {
+        List<Component> tooltips = event.getToolTip();
+
+        if(isGuerkItem(event.getItemStack().getItem()))
+        {
+            tooltips.add(5, Component.literal(" 1 Food Leech").withStyle(ChatFormatting.DARK_GREEN));
+        }
+    }
+
+    @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event)
     {
+        if(event.getSource().getEntity() instanceof LivingEntity livingEntity && isGuerkItem(livingEntity.getMainHandItem().getItem()))
+        {
+            foodLeech(livingEntity, event.getEntity(), 1);
+        }
+
         if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() >= 12 && !isStand(player, event.getEntity()))
         {
             event.getEntity().addEffect(new MobEffectInstance(ModEffects.THREE_FREEZE.get(), 20, 0, false, false, true));
@@ -301,31 +320,16 @@ public class ModEvents
 
     private static int getStandID(Player player)
     {
-        /*
-        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
-                .map(stand -> { return stand.getStandID(); })
-                .orElse(10);
-        */
         return ClientStandData.getStandID();
     }
 
     private static boolean standIsActive(Player player)
     {
-        /*
-        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
-                .map(stand -> { return stand.getStandActive(); })
-                .orElse(false);
-        */
         return ClientStandData.getStandActive();
     }
 
     private static boolean getBomb(Player player)
     {
-        /*
-        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
-                .map(stand -> { return stand.getBomb(); })
-                .orElse(false);
-        */
         return ClientStandData.getBomb();
     }
 
@@ -343,6 +347,27 @@ public class ModEvents
     {
         if(entity.hasCustomName() && entity.getCustomName().equals(player.getName())) return true;
         else return false;
+    }
+
+    private static boolean isGuerkItem(Item item)
+    {
+        if(item.equals(ModItems.GUERK_SWORD.get()) || item.equals(ModItems.GUERK_PICKAXE.get()) || item.equals(ModItems.GUERK_AXE.get()) || item.equals(ModItems.GUERK_SHOVEL.get()) || item.equals(ModItems.GUERK_HOE.get()))
+        {
+            return true;
+        }
+        else return false;
+    }
+
+    private static void foodLeech(LivingEntity attacker, LivingEntity target, int food)
+    {
+        if(attacker instanceof Player attackerP)
+        {
+            if(attackerP.getFoodData().getFoodLevel() + food <= 20) attackerP.getFoodData().setFoodLevel(attackerP.getFoodData().getFoodLevel() + food);
+        }
+        if(target instanceof Player targetP)
+        {
+            if(targetP.getFoodData().getFoodLevel() - food >= 0) targetP.getFoodData().setFoodLevel(targetP.getFoodData().getFoodLevel() - food);
+        }
     }
 
     private static Vec3 behindTP(LivingEntity target, LivingEntity traveler, double yOffset)

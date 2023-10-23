@@ -7,9 +7,7 @@ import net.guerkhd.minecraftrequiem.item.Custom.StandRemoveArrowItem;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.*;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -29,12 +27,12 @@ public class ModItems
                     .food(Foods.RAW_GUERK)
                     .tab(ModCreativeModeTab.MINECRAFTREQUIEM_TAB)));
 
-    public static final RegistryObject<Item> STAND_ARROW = ITEMS.register("stand_arrow",
+    public static final RegistryObject<StandArrowItem> STAND_ARROW = ITEMS.register("stand_arrow",
             () -> new StandArrowItem(new Item.Properties()
                     .stacksTo(1)
                     .fireResistant()
                     .tab(ModCreativeModeTab.MINECRAFTREQUIEM_TAB)));
-    public static final RegistryObject<Item> REQUIEM_ARROW = ITEMS.register("requiem_arrow",
+    public static final RegistryObject<RequiemArrowItem> REQUIEM_ARROW = ITEMS.register("requiem_arrow",
             () -> new RequiemArrowItem(new Item.Properties()
                     .stacksTo(1)
                     .fireResistant()
@@ -49,10 +47,26 @@ public class ModItems
                     .stacksTo(1)
                     .fireResistant()
                     .tab(ModCreativeModeTab.MINECRAFTREQUIEM_TAB)));
-    public static final RegistryObject<Item> REMOVER_ARROW = ITEMS.register("remover_arrow",
+    public static final RegistryObject<StandRemoveArrowItem> REMOVER_ARROW = ITEMS.register("remover_arrow",
             () -> new StandRemoveArrowItem(new Item.Properties()
                     .stacksTo(1)
                     .fireResistant()
+                    .tab(ModCreativeModeTab.MINECRAFTREQUIEM_TAB)));
+
+    public static final RegistryObject<SwordItem> GUERK_SWORD = ITEMS.register("guerk_sword",
+            () -> new SwordItem(Tiers.STONE, 3, -2.4f, new Item.Properties()
+                    .tab(ModCreativeModeTab.MINECRAFTREQUIEM_TAB)));
+    public static final RegistryObject<PickaxeItem> GUERK_PICKAXE = ITEMS.register("guerk_pickaxe",
+            () -> new PickaxeItem(Tiers.STONE, 1, -2.8f, new Item.Properties()
+                    .tab(ModCreativeModeTab.MINECRAFTREQUIEM_TAB)));
+    public static final RegistryObject<AxeItem> GUERK_AXE = ITEMS.register("guerk_axe",
+            () -> new AxeItem(Tiers.STONE, 7, -3.2f, new Item.Properties()
+                    .tab(ModCreativeModeTab.MINECRAFTREQUIEM_TAB)));
+    public static final RegistryObject<ShovelItem> GUERK_SHOVEL = ITEMS.register("guerk_shovel",
+            () -> new ShovelItem(Tiers.STONE, 1.5f, -3, new Item.Properties()
+                    .tab(ModCreativeModeTab.MINECRAFTREQUIEM_TAB)));
+    public static final RegistryObject<HoeItem> GUERK_HOE = ITEMS.register("guerk_hoe",
+            () -> new HoeItem(Tiers.STONE, -1, -2, new Item.Properties()
                     .tab(ModCreativeModeTab.MINECRAFTREQUIEM_TAB)));
 
     public static class Foods

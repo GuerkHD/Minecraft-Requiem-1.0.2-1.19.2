@@ -152,7 +152,7 @@ public class ModEvents
                     , player.getOnPos()
                     , SoundEvents.CREEPER_PRIMED
                     , SoundSource.VOICE
-                    , 1f
+                    , 8f
                     , level.random.nextFloat() * 0.1f + 0.9f);
         }
     }
@@ -296,7 +296,7 @@ public class ModEvents
             }
         }
 
-        if(event.getEntity().hasCustomName() && event.getEntity() instanceof Zombie && event.getEntity().hasEffect(MobEffects.INVISIBILITY))
+        if(isStand(event.getEntity()))
         {
             event.getEntity().clearFire();
 
@@ -375,6 +375,12 @@ public class ModEvents
         {
             return true;
         }
+        else return false;
+    }
+
+    private static boolean isStand(LivingEntity entity)
+    {
+        if(entity instanceof Zombie stand && stand.hasCustomName() && stand.hasEffect(MobEffects.INVISIBILITY) && stand.isNoAi()) return true;
         else return false;
     }
 

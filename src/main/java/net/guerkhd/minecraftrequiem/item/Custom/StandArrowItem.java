@@ -33,7 +33,7 @@ public class StandArrowItem extends Item
                 ModMessages.sendToServer(new ArrowC2SPacket());
                 player.giveExperiencePoints(-1395);
             }
-            else player.kill();
+            else player.hurt(DamageSource.MAGIC, Float.MAX_VALUE);
 
             player.getCooldowns().addCooldown(this, 20);
         }

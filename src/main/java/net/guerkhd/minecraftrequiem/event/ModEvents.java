@@ -139,6 +139,25 @@ public class ModEvents
     }
 
     @SubscribeEvent
+    public static void onItemPickup(PlayerEvent.ItemPickupEvent event)
+    {
+        Player player = event.getEntity();
+        String name = player.getName().getString();
+        Level level = player.getLevel();
+        Item item = event.getStack().getItem();
+
+        if(name.equals("Knorke75") && item.equals(Items.DIAMOND))
+        {
+            level.playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.CREEPER_PRIMED
+                    , SoundSource.VOICE
+                    , 1f
+                    , level.random.nextFloat() * 0.1f + 0.9f);
+        }
+    }
+
+    @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event)
     {
         if(event.getSource().getEntity() instanceof LivingEntity livingEntity && isGuerkItem(livingEntity.getMainHandItem().getItem()))

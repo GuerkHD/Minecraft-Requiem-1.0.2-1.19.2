@@ -113,6 +113,7 @@ public class ModEvents
                     ModMessages.sendToPlayer(new StandActiveDataSyncS2CPacket(stand.getStandActive()), player);
                     ModMessages.sendToPlayer(new StandIDDataSyncS2CPacket(stand.getStandID()), player);
                     ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
+                    ModMessages.sendToPlayer(new StandMaxYDataSyncS2CPacket(stand.getMaxY()), player);
                 });
             }
         }

@@ -166,7 +166,7 @@ public class ModEvents
             foodLeech(livingEntity, event.getEntity(), 1);
         }
 
-        if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() >= 12 && !isStand(player, event.getEntity()))
+        if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() >= 12 && !isStand(event.getEntity()))
         {
             event.getEntity().addEffect(new MobEffectInstance(ModEffects.THREE_FREEZE.get(), 20, 0, false, false, true));
             if(player.gameMode.isSurvival()) player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - 12);
@@ -177,7 +177,7 @@ public class ModEvents
                     , 1f
                     , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
         }
-        else if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() < 12 && !isStand(player, event.getEntity()))
+        else if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() < 12 && !isStand(event.getEntity()))
         {
             event.getEntity().getLevel().playSound(null
                     , player.getOnPos()
@@ -196,7 +196,7 @@ public class ModEvents
             if(!list.isEmpty()) getClosest(list, event.getEntity()).hurt(DamageSource.MAGIC, event.getAmount());
         }
 
-        if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 7 && standIsActive(player) && !getBomb(player) && !event.getEntity().hasCustomName())
+        if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 7 && standIsActive(player) && !getBomb(player) && !isStand(event.getEntity()))
         {
             event.getEntity().addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 36000, 0, false, false, true));
 
@@ -362,12 +362,6 @@ public class ModEvents
     private static double random()
     {
         return RandomSource.createNewThreadLocalInstance().nextDouble();
-    }
-
-    private static boolean isStand(ServerPlayer player, LivingEntity entity)
-    {
-        if(entity.hasCustomName() && entity.getCustomName().equals(player.getName())) return true;
-        else return false;
     }
 
     private static boolean isGuerkItem(Item item)

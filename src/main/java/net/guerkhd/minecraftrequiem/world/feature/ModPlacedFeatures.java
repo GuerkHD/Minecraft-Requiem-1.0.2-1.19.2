@@ -1,6 +1,7 @@
 package net.guerkhd.minecraftrequiem.world.feature;
 
 import net.guerkhd.minecraftrequiem.MinecraftRequiem;
+import net.guerkhd.minecraftrequiem.config.MinecraftRequiemCommonConfig;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.placement.*;
@@ -17,7 +18,7 @@ public class ModPlacedFeatures
 
     public static final RegistryObject<PlacedFeature> GUERK_ORE_PLACED = PLACED_FEATURE.register("guerk_ore_placed",
             () -> new PlacedFeature(ModConfiguredFeatures.GUERK_ORE.getHolder().get(),
-                    commonOrePlacement(5,
+                    commonOrePlacement(MinecraftRequiemCommonConfig.GUERK_ORE_VEINS_PER_CHUNK.getDefault(),
                             HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-50), VerticalAnchor.aboveBottom(150)))));
 
     public static List<PlacementModifier> orePlacement(PlacementModifier p_195347_, PlacementModifier p_195348_)

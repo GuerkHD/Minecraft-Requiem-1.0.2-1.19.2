@@ -1,6 +1,7 @@
 package net.guerkhd.minecraftrequiem.networking.packet;
 
 import net.guerkhd.minecraftrequiem.client.ClientStandData;
+import net.guerkhd.minecraftrequiem.config.MinecraftRequiemCommonConfig;
 import net.guerkhd.minecraftrequiem.effect.ModEffects;
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.sound.ModSounds;
@@ -74,7 +75,7 @@ public class AbilityC2SPacket
 
             if(getStandID(player) == 0)
             {
-                cost = 6;
+                cost = MinecraftRequiemCommonConfig.THE_WORLD_COST.get();
 
                 if(food >= cost)
                 {
@@ -97,16 +98,16 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 1)
             {
-                cost = 17;
+                cost = MinecraftRequiemCommonConfig.D4C_COST.get();
 
                 if(food >= cost && !player.getLevel().dimension().equals(Level.OVERWORLD))
                 {
                     standSound(level, player, 1, true);
                     player.teleportTo(player.getServer().getLevel(Level.OVERWORLD), respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), player.getYRot(), player.getXRot());
                 }
-                else if(food >= 6)
+                else if(food >= MinecraftRequiemCommonConfig.THE_WORLD_COST.get())
                 {
-                    cost = 6;
+                    cost = MinecraftRequiemCommonConfig.THE_WORLD_COST.get();
                     D4C(level, player);
                 }
                 else
@@ -117,7 +118,7 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 2)
             {
-                cost = 5;
+                cost = MinecraftRequiemCommonConfig.MAGICIANS_RED_COST.get();
 
                 if(food >= cost)
                 {
@@ -135,7 +136,7 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 3)
             {
-                cost = 7;
+                cost = MinecraftRequiemCommonConfig.C_MOON_COST.get();
 
                 if(food >= cost)
                 {
@@ -155,7 +156,7 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 4)
             {
-                cost = 6;
+                cost = MinecraftRequiemCommonConfig.WEATHER_REPORT_COST.get();
 
                 if(food >= cost)
                 {
@@ -199,7 +200,7 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 7)
             {
-                cost = 7;
+                cost = MinecraftRequiemCommonConfig.KILLER_QUEEN_COST.get();
 
                 if(player.isCrouching() && !getBomb(player))
                 {
@@ -213,7 +214,7 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 8)
             {
-                cost = 9;
+                cost = MinecraftRequiemCommonConfig.KING_CRIMSON_COST.get();
 
                 if(food >= cost)
                 {
@@ -227,7 +228,7 @@ public class AbilityC2SPacket
             }
             else if(getStandID(player) == 9)
             {
-                cost = 12;
+                cost = MinecraftRequiemCommonConfig.GREEN_DAY_COST.get();
 
                 if(food >= cost)
                 {
@@ -327,12 +328,12 @@ public class AbilityC2SPacket
 
                     if(ent.hasCustomName() && ent.getCustomName().getString().equals("Sheer Heart Attack"))
                     {
-                        level.explode(player, ent.getX(), ent.getY(), ent.getZ(), 3, Explosion.BlockInteraction.BREAK);
+                        level.explode(player, ent.getX(), ent.getY(), ent.getZ(), 3, MinecraftRequiemCommonConfig.HEART_ATTACK_DESTRUCTION.get());
                         ent.remove(Entity.RemovalReason.DISCARDED);
                     }
                     else
                     {
-                        level.explode(player, ent.getX(), ent.getY()+1, ent.getZ(), 2, Explosion.BlockInteraction.NONE);
+                        level.explode(player, ent.getX(), ent.getY()+1, ent.getZ(), 2, MinecraftRequiemCommonConfig.BOMB_DESTRUCTION.get());
                     }
                 }
             }

@@ -4,6 +4,7 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import net.guerkhd.minecraftrequiem.MinecraftRequiem;
 import net.guerkhd.minecraftrequiem.block.ModBlocks;
+import net.guerkhd.minecraftrequiem.config.MinecraftRequiemCommonConfig;
 import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -26,7 +27,7 @@ public class ModConfiguredFeatures
             OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES, ModBlocks.DEEPSLATE_GUERK_ORE.get().defaultBlockState())));
 
     public static final RegistryObject<ConfiguredFeature<?, ?>> GUERK_ORE = CONFIGURED_FEATURES.register("guerk_ore",
-            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OVERWORLD_GUERK_ORES.get(), 5)));
+            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OVERWORLD_GUERK_ORES.get(), MinecraftRequiemCommonConfig.GUERK_ORE_VEIN_SIZE.getDefault())));
 
     public static void register(IEventBus eventBus)
     {

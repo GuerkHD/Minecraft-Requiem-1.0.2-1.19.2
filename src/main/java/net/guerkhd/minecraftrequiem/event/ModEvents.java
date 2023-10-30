@@ -2,6 +2,7 @@ package net.guerkhd.minecraftrequiem.event;
 
 import net.guerkhd.minecraftrequiem.MinecraftRequiem;
 import net.guerkhd.minecraftrequiem.client.ClientStandData;
+import net.guerkhd.minecraftrequiem.config.MinecraftRequiemCommonConfig;
 import net.guerkhd.minecraftrequiem.effect.ModEffects;
 import net.guerkhd.minecraftrequiem.item.ModItems;
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
@@ -166,10 +167,10 @@ public class ModEvents
             foodLeech(livingEntity, event.getEntity(), 1);
         }
 
-        if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() >= 12 && !isStand(event.getEntity()))
+        if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() >= MinecraftRequiemCommonConfig.ECHOS_ACT_3_COST.get() && !isStand(event.getEntity()))
         {
             event.getEntity().addEffect(new MobEffectInstance(ModEffects.THREE_FREEZE.get(), 20, 0, false, false, true));
-            if(player.gameMode.isSurvival()) player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - 12);
+            if(player.gameMode.isSurvival()) player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - MinecraftRequiemCommonConfig.ECHOS_ACT_3_COST.get());
             event.getEntity().getLevel().playSound(null
                     , player.getOnPos()
                     , ModSounds.THREE_FREEZE.get()
@@ -177,7 +178,7 @@ public class ModEvents
                     , 1f
                     , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
         }
-        else if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() < 12 && !isStand(event.getEntity()))
+        else if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() < MinecraftRequiemCommonConfig.ECHOS_ACT_3_COST.get() && !isStand(event.getEntity()))
         {
             event.getEntity().getLevel().playSound(null
                     , player.getOnPos()

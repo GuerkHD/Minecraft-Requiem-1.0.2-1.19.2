@@ -19,6 +19,7 @@ public class PlayerStand
     //ID 6 = Highway To Hell
     //ID 7 = Killer Queen
     //ID 8 = King Crimson
+    //ID 9 = Green Day
 
     public boolean getStandUser()
     {

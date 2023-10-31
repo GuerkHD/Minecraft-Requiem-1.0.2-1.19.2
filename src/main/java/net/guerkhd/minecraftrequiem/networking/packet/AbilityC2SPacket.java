@@ -65,7 +65,6 @@ public class AbilityC2SPacket
         KING_CRIMSON,
         GREEN_DAY,
         UNKNOWN;
-
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier)

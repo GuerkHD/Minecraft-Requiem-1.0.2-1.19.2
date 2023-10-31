@@ -46,18 +46,25 @@ import java.util.stream.Collectors;
 
 public class AbilityC2SPacket
 {
-    public AbilityC2SPacket()
+    public AbilityC2SPacket() {    }
+
+    public AbilityC2SPacket(FriendlyByteBuf buf) {    }
+
+    public void toBytes(FriendlyByteBuf buf) {    }
+
+    public enum StandType
     {
-
-    }
-
-    public AbilityC2SPacket(FriendlyByteBuf buf)
-    {
-
-    }
-
-    public void toBytes(FriendlyByteBuf buf)
-    {
+        THE_WORLD,
+        D4C,
+        MAGICIANS_RED,
+        C_MOON,
+        WEATHER_REPORT,
+        ECHOS,
+        HIGHWAY_TO_HELL,
+        KILLER_QUEEN,
+        KING_CRIMSON,
+        GREEN_DAY,
+        UNKNOWN;
 
     }
 
@@ -70,121 +77,116 @@ public class AbilityC2SPacket
             ServerLevel level = player.getLevel();
             BlockPos respawnPos = player.getLevel().getSharedSpawnPos();
 
+            StandType standType = getStandType(player);
             int food = player.getFoodData().getFoodLevel();
             int cost = 0;
 
-            if(getStandID(player) == 0)
+            switch(standType)
             {
-                cost = MinecraftRequiemCommonConfig.THE_WORLD_COST.get();
-
-                if(food >= cost)
-                {
-                    Vec3 theWorld = player.pick(20, 1f, false).getLocation();
-                    player.moveTo(theWorld);
-                    standSound(level, player, 0, true);
-
-                    List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(10));
-
-                    for(LivingEntity ent : list)
-                    {
-                        if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(ModEffects.TIME_STOP.get(), 20, 0, false, false, true));
-                    }
-                }
-                else
-                {
-                    cost = 0;
-                    standSound(level, player, 0, false);
-                }
-            }
-            else if(getStandID(player) == 1)
-            {
-                cost = MinecraftRequiemCommonConfig.D4C_COST.get();
-
-                if(food >= cost && !player.getLevel().dimension().equals(Level.OVERWORLD))
-                {
-                    standSound(level, player, 1, true);
-                    player.teleportTo(player.getServer().getLevel(Level.OVERWORLD), respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), player.getYRot(), player.getXRot());
-                }
-                else if(food >= MinecraftRequiemCommonConfig.THE_WORLD_COST.get())
-                {
+                case THE_WORLD:
                     cost = MinecraftRequiemCommonConfig.THE_WORLD_COST.get();
-                    D4C(level, player);
-                }
-                else
-                {
-                    cost = 0;
-                    standSound(level, player, 1, false);
-                }
-            }
-            else if(getStandID(player) == 2)
-            {
-                cost = MinecraftRequiemCommonConfig.MAGICIANS_RED_COST.get();
 
-                if(food >= cost)
-                {
-                    standSound(level, player, 2, true);
-                    LargeFireball fireball = new LargeFireball(level, player, player.getViewVector(1f).x, player.getViewVector(1f).y, player.getViewVector(1f).z, 3);
-                    fireball.setPosRaw(player.getX(), player.getY()+player.getEyeHeight(), player.getZ());
-                    fireball.shoot(player.getViewVector(1f).x, player.getViewVector(1f).y, player.getViewVector(1f).z, 3f, 0f);
-                    level.addFreshEntity(fireball);
-                }
-                else
-                {
-                    cost = 0;
-                    standSound(level, player, 2, false);
-                }
-            }
-            else if(getStandID(player) == 3)
-            {
-                cost = MinecraftRequiemCommonConfig.C_MOON_COST.get();
-
-                if(food >= cost)
-                {
-                    standSound(level, player, 3, true);
-                    List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
-
-                    for(LivingEntity ent : list)
+                    if(food >= cost)
                     {
-                        if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 40, 9, false, false, false));
+                        Vec3 theWorld = player.pick(20, 1f, false).getLocation();
+                        player.moveTo(theWorld);
+                        standSound(level, player, 0, true);
+
+                        List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(10));
+
+                        for(LivingEntity ent : list)
+                        {
+                            if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(ModEffects.TIME_STOP.get(), 20, 0, false, false, true));
+                        }
                     }
-                }
-                else
-                {
-                    cost = 0;
-                    standSound(level, player, 3, false);
-                }
-            }
-            else if(getStandID(player) == 4)
-            {
-                cost = MinecraftRequiemCommonConfig.WEATHER_REPORT_COST.get();
-
-                if(food >= cost)
-                {
-                    standSound(level, player, 4, true);
-
-                    if(level.isThundering())
+                    else
                     {
-                            Vec3 blitz = player.pick(30, 1f, false).getLocation();
-
-                            LightningBolt lightningBolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
-                            lightningBolt.setPosRaw(blitz.x, blitz.y, blitz.z);
-                            level.addFreshEntity(lightningBolt);
+                        cost = 0;
+                        standSound(level, player, 0, false);
                     }
+                    break;
+                case D4C:
+                    cost = MinecraftRequiemCommonConfig.D4C_COST.get();
 
-                    if(!level.isThundering()) level.setWeatherParameters(0, 1200, true, true);
-                }
-                else
-                {
-                    cost = 0;
-                    standSound(level, player, 4, false);
-                }
-            }
-            else if(getStandID(player) == 5)
-            {
-                //Nothing to see here
-            }
-            else if(getStandID(player) == 6)
-            {
+                    if(food >= cost && !player.getLevel().dimension().equals(Level.OVERWORLD))
+                    {
+                        standSound(level, player, 1, true);
+                        player.teleportTo(player.getServer().getLevel(Level.OVERWORLD), respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), player.getYRot(), player.getXRot());
+                    }
+                    else if(food >= MinecraftRequiemCommonConfig.THE_WORLD_COST.get())
+                    {
+                        cost = MinecraftRequiemCommonConfig.THE_WORLD_COST.get();
+                        D4C(level, player);
+                    }
+                    else
+                    {
+                        cost = 0;
+                        standSound(level, player, 1, false);
+                    }
+                    break;
+                case MAGICIANS_RED:
+                    cost = MinecraftRequiemCommonConfig.MAGICIANS_RED_COST.get();
+
+                    if(food >= cost)
+                    {
+                        standSound(level, player, 2, true);
+                        LargeFireball fireball = new LargeFireball(level, player, player.getViewVector(1f).x, player.getViewVector(1f).y, player.getViewVector(1f).z, 3);
+                        fireball.setPosRaw(player.getX(), player.getY()+player.getEyeHeight(), player.getZ());
+                        fireball.shoot(player.getViewVector(1f).x, player.getViewVector(1f).y, player.getViewVector(1f).z, 3f, 0f);
+                        level.addFreshEntity(fireball);
+                    }
+                    else
+                    {
+                        cost = 0;
+                        standSound(level, player, 2, false);
+                    }
+                    break;
+                case C_MOON:
+                    cost = MinecraftRequiemCommonConfig.C_MOON_COST.get();
+
+                    if(food >= cost)
+                    {
+                        standSound(level, player, 3, true);
+                        List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(15));
+
+                        for(LivingEntity ent : list)
+                        {
+                            if(!ent.equals(player)) ent.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 40, 9, false, false, false));
+                        }
+                    }
+                    else
+                    {
+                        cost = 0;
+                        standSound(level, player, 3, false);
+                    }
+                    break;
+                case WEATHER_REPORT:
+                    cost = MinecraftRequiemCommonConfig.WEATHER_REPORT_COST.get();
+
+                    if(food >= cost)
+                    {
+                        standSound(level, player, 4, true);
+
+                        if(level.isThundering())
+                        {
+                                Vec3 blitz = player.pick(30, 1f, false).getLocation();
+
+                                LightningBolt lightningBolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
+                                lightningBolt.setPosRaw(blitz.x, blitz.y, blitz.z);
+                                level.addFreshEntity(lightningBolt);
+                        }
+
+                        if(!level.isThundering()) level.setWeatherParameters(0, 1200, true, true);
+                    }
+                    else
+                    {
+                        cost = 0;
+                        standSound(level, player, 4, false);
+                    }
+                    break;
+                case ECHOS:
+                    break;
+                case HIGHWAY_TO_HELL:
                     if(player.getMainHandItem().getItem() instanceof SwordItem sword)
                     {
                         player.hurt(DamageSource.playerAttack(player), sword.getDamage() + 1f);
@@ -197,64 +199,61 @@ public class AbilityC2SPacket
                     {
                         player.hurt(DamageSource.playerAttack(player), player.getAttackStrengthScale(0));
                     }
-            }
-            else if(getStandID(player) == 7)
-            {
-                cost = MinecraftRequiemCommonConfig.KILLER_QUEEN_COST.get();
+                    break;
+                case KILLER_QUEEN:
+                    cost = MinecraftRequiemCommonConfig.KILLER_QUEEN_COST.get();
 
-                if(player.isCrouching() && !getBomb(player))
-                {
-                    spawnHeartAttack(level, player);
-                    cost = 0;
-                }
-                else
-                {
-                    cost = bomb(level, player, food, cost);
-                }
-            }
-            else if(getStandID(player) == 8)
-            {
-                cost = MinecraftRequiemCommonConfig.KING_CRIMSON_COST.get();
-
-                if(food >= cost)
-                {
-                    player.addEffect(new MobEffectInstance(ModEffects.EPITAPH.get(), 100, 0, false, false, true));
-                }
-                else
-                {
-                    cost = 0;
-                    standSound(level, player, 8, false);
-                }
-            }
-            else if(getStandID(player) == 9)
-            {
-                cost = MinecraftRequiemCommonConfig.GREEN_DAY_COST.get();
-
-                if(food >= cost)
-                {
-                    List<ServerPlayer> list = level.getEntitiesOfClass(ServerPlayer.class, player.getBoundingBox().inflate(15));
-                    list.remove(player);
-
-                    for(ServerPlayer play : list)
+                    if(player.isCrouching() && !getBomb(player))
                     {
-                        play.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
-                        {
-                            stand.setMaxY(play.getY());
-                            ModMessages.sendToPlayer(new StandMaxYDataSyncS2CPacket(stand.getMaxY()), play);
-                        });
-
-                        play.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), 500, 0, false, false, true));
+                        spawnHeartAttack(level, player);
+                        cost = 0;
                     }
+                    else
+                    {
+                        cost = bomb(level, player, food, cost);
+                    }
+                    break;
+                case KING_CRIMSON:
+                    cost = MinecraftRequiemCommonConfig.KING_CRIMSON_COST.get();
 
-                    standSound(level, player, 9, true);
-                }
-                else
-                {
-                    cost = 0;
-                    standSound(level, player, 9, false);
-                }
+                    if(food >= cost)
+                    {
+                        player.addEffect(new MobEffectInstance(ModEffects.EPITAPH.get(), 100, 0, false, false, true));
+                    }
+                    else
+                    {
+                        cost = 0;
+                        standSound(level, player, 8, false);
+                    }
+                    break;
+                case GREEN_DAY:
+                    cost = MinecraftRequiemCommonConfig.GREEN_DAY_COST.get();
+
+                    if(food >= cost)
+                    {
+                        List<ServerPlayer> list = level.getEntitiesOfClass(ServerPlayer.class, player.getBoundingBox().inflate(15));
+                        list.remove(player);
+
+                        for(ServerPlayer play : list)
+                        {
+                            play.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
+                            {
+                                stand.setMaxY(play.getY());
+                                ModMessages.sendToPlayer(new StandMaxYDataSyncS2CPacket(stand.getMaxY()), play);
+                            });
+
+                            play.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), 500, 0, false, false, true));
+                        }
+
+                        standSound(level, player, 9, true);
+                    }
+                    else
+                    {
+                        cost = 0;
+                        standSound(level, player, 9, false);
+                    }
+                    break;
             }
-
             if(player.gameMode.isSurvival()) player.getFoodData().setFoodLevel(food - cost);
         });
         return true;
@@ -274,11 +273,12 @@ public class AbilityC2SPacket
                 .orElse(false);
     }
 
-    private int getStandID(ServerPlayer player)
+    private StandType getStandType(ServerPlayer player)
     {
-        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
+        int ID = player.getCapability(PlayerStandProvider.PLAYER_STAND)
                 .map(stand -> { return stand.getStandID(); })
                 .orElse(10);
+        return StandType.values()[ID];
     }
 
     private boolean getBomb(ServerPlayer player)

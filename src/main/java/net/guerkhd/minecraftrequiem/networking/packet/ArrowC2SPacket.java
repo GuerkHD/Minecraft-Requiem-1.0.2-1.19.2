@@ -17,19 +17,25 @@ import java.util.function.Supplier;
 
 public class ArrowC2SPacket
 {
-    public ArrowC2SPacket()
+    public ArrowC2SPacket() {    }
+
+    public ArrowC2SPacket(FriendlyByteBuf buf) {    }
+
+    public void toBytes(FriendlyByteBuf buf) {    }
+
+    public enum StandType
     {
-
-    }
-
-    public ArrowC2SPacket(FriendlyByteBuf buf)
-    {
-
-    }
-
-    public void toBytes(FriendlyByteBuf buf)
-    {
-
+        THE_WORLD,
+        D4C,
+        MAGICIANS_RED,
+        C_MOON,
+        WEATHER_REPORT,
+        ECHOS,
+        HIGHWAY_TO_HELL,
+        KILLER_QUEEN,
+        KING_CRIMSON,
+        GREEN_DAY,
+        UNKNOWN;
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier)
@@ -56,45 +62,40 @@ public class ArrowC2SPacket
                     ModMessages.sendToPlayer(new StandUserDataSyncS2CPacket(stand.getStandUser()), player);
                     ModMessages.sendToPlayer(new StandIDDataSyncS2CPacket(stand.getStandID()), player);
 
-                    if(stand.getStandID() == 0)
+                    StandType standType = getStandType(player);
+
+                    switch(standType)
                     {
-                        player.sendSystemMessage(Component.literal("The World").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
-                    }
-                    else if(stand.getStandID() == 1)
-                    {
-                        player.sendSystemMessage(Component.literal("Dirty Deeds Done Dirt Cheap").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.BLUE));
-                    }
-                    else if(stand.getStandID() == 2)
-                    {
-                        player.sendSystemMessage(Component.literal("Magicians Red").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.RED));
-                    }
-                    else if(stand.getStandID() == 3)
-                    {
-                        player.sendSystemMessage(Component.literal("C-Moon").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_GREEN));
-                    }
-                    else if(stand.getStandID() == 4)
-                    {
-                        player.sendSystemMessage(Component.literal("Weather Report").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.WHITE));
-                    }
-                    else if(stand.getStandID() == 5)
-                    {
-                        player.sendSystemMessage(Component.literal("Echos Act 3").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GREEN));
-                    }
-                    else if(stand.getStandID() == 6)
-                    {
-                        player.sendSystemMessage(Component.literal("Highway To Hell").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_PURPLE));
-                    }
-                    else if(stand.getStandID() == 7)
-                    {
-                        player.sendSystemMessage(Component.literal("Killer Queen").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.LIGHT_PURPLE));
-                    }
-                    else if(stand.getStandID() == 8)
-                    {
-                        player.sendSystemMessage(Component.literal("King Crimson").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_RED));
-                    }
-                    else if(stand.getStandID() == 9)
-                    {
-                        player.sendSystemMessage(Component.literal("Green Day").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_GREEN));
+                        case THE_WORLD:
+                            player.sendSystemMessage(Component.literal("The World").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GOLD));
+                            break;
+                        case D4C:
+                            player.sendSystemMessage(Component.literal("Dirty Deeds Done Dirt Cheap").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.BLUE));
+                            break;
+                        case MAGICIANS_RED:
+                            player.sendSystemMessage(Component.literal("Magicians Red").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.RED));
+                            break;
+                        case C_MOON:
+                            player.sendSystemMessage(Component.literal("C-Moon").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_GREEN));
+                            break;
+                        case WEATHER_REPORT:
+                            player.sendSystemMessage(Component.literal("Weather Report").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.WHITE));
+                            break;
+                        case ECHOS:
+                            player.sendSystemMessage(Component.literal("Echos Act 3").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GREEN));
+                            break;
+                        case HIGHWAY_TO_HELL:
+                            player.sendSystemMessage(Component.literal("Highway To Hell").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_PURPLE));
+                            break;
+                        case KILLER_QUEEN:
+                            player.sendSystemMessage(Component.literal("Killer Queen").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.LIGHT_PURPLE));
+                            break;
+                        case KING_CRIMSON:
+                            player.sendSystemMessage(Component.literal("King Crimson").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_RED));
+                            break;
+                        case GREEN_DAY:
+                            player.sendSystemMessage(Component.literal("Green Day").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_GREEN));
+                            break;
                     }
                 });
             }
@@ -109,10 +110,11 @@ public class ArrowC2SPacket
                 .orElse(false);
     }
 
-    private boolean standIsActive(ServerPlayer player)
+    private StandType getStandType(ServerPlayer player)
     {
-        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
-                .map(stand -> { return stand.getStandActive(); })
-                .orElse(false);
+        int ID = player.getCapability(PlayerStandProvider.PLAYER_STAND)
+                .map(stand -> { return stand.getStandID(); })
+                .orElse(10);
+        return StandType.values()[ID];
     }
 }

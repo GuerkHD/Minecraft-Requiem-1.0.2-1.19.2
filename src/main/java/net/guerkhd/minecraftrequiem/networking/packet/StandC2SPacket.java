@@ -27,19 +27,25 @@ import java.util.function.Supplier;
 
 public class StandC2SPacket
 {
-    public StandC2SPacket()
+    public StandC2SPacket() {    }
+
+    public StandC2SPacket(FriendlyByteBuf buf) {    }
+
+    public void toBytes(FriendlyByteBuf buf) {    }
+
+    public enum StandType
     {
-
-    }
-
-    public StandC2SPacket(FriendlyByteBuf buf)
-    {
-
-    }
-
-    public void toBytes(FriendlyByteBuf buf)
-    {
-
+        THE_WORLD,
+        D4C,
+        MAGICIANS_RED,
+        C_MOON,
+        WEATHER_REPORT,
+        ECHOS,
+        HIGHWAY_TO_HELL,
+        KILLER_QUEEN,
+        KING_CRIMSON,
+        GREEN_DAY,
+        UNKNOWN;
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier)
@@ -49,12 +55,13 @@ public class StandC2SPacket
         {
             ServerPlayer player = context.getSender();
             ServerLevel level = player.getLevel();
+            StandType standType = getStandType(player);
 
-            Zombie standEntity = initializeStand(level, player);
+            Zombie standEntity = initializeStand(level, player, standType);
 
             if(isStandUser(player) && !standIsActive(player))
             {
-                if(getStandID(player) != 6) level.addFreshEntity(standEntity);
+                if(getStandType(player) != StandType.HIGHWAY_TO_HELL) level.addFreshEntity(standEntity);
 
                 level.playSound(null
                         , player.getOnPos()
@@ -87,15 +94,12 @@ public class StandC2SPacket
                     ModMessages.sendToPlayer(new StandActiveDataSyncS2CPacket(stand.getStandActive()), player);
                 });
             }
-            else
-            {
-                player.sendSystemMessage(Component.literal("Skill issue."));
-            }
+            else player.sendSystemMessage(Component.literal("Skill issue."));
         });
         return true;
     }
 
-    private Zombie initializeStand(ServerLevel level, ServerPlayer player)
+    private Zombie initializeStand(ServerLevel level, ServerPlayer player, StandType standType)
     {
         Zombie stand = new Zombie(level);
 
@@ -111,14 +115,14 @@ public class StandC2SPacket
         stand.setCustomName(player.getName());
         stand.setCustomNameVisible(false);
 
-        if(getStandID(player) == 5) stand.setBaby(true);
+        if(getStandType(player) == StandType.ECHOS) stand.setBaby(true);
 
         ItemStack helmet = new ItemStack(Items.LEATHER_HELMET);
         ItemStack chestplate = new ItemStack(Items.LEATHER_CHESTPLATE);
         ItemStack leggins = new ItemStack(Items.LEATHER_LEGGINGS);
         ItemStack boots = new ItemStack(Items.LEATHER_BOOTS);
 
-        List<DyeItem> color = getList(player);
+        List<DyeItem> color = getList(standType);
 
         helmet = DyeableLeatherItem.dyeArmor(helmet, color);
         chestplate = DyeableLeatherItem.dyeArmor(chestplate, color);
@@ -133,20 +137,41 @@ public class StandC2SPacket
         return stand;
     }
 
-    private List<DyeItem> getList(ServerPlayer player)
+    private List<DyeItem> getList(StandType standType)
     {
         List<DyeItem> list = new ArrayList<>();
 
-        if(getStandID(player) == 0) list.add(DyeItem.byColor(DyeColor.YELLOW));
-        else if(getStandID(player) == 1) list.add(DyeItem.byColor(DyeColor.LIGHT_BLUE));
-        else if(getStandID(player) == 2) list.add(DyeItem.byColor(DyeColor.ORANGE));
-        else if(getStandID(player) == 3) list.add(DyeItem.byColor(DyeColor.GREEN));
-        else if(getStandID(player) == 4) list.add(DyeItem.byColor(DyeColor.WHITE));
-        else if(getStandID(player) == 5) list.add(DyeItem.byColor(DyeColor.LIME));
-        else if(getStandID(player) == 6) list.add(DyeItem.byColor(DyeColor.PURPLE));
-        else if(getStandID(player) == 7) list.add(DyeItem.byColor(DyeColor.PINK));
-        else if(getStandID(player) == 8) list.add(DyeItem.byColor(DyeColor.RED));
-        else if(getStandID(player) == 9) list.add(DyeItem.byColor(DyeColor.GREEN));
+        switch(standType)
+        {
+            case THE_WORLD:
+                list.add(DyeItem.byColor(DyeColor.YELLOW));
+                break;
+            case D4C:
+                list.add(DyeItem.byColor(DyeColor.LIGHT_BLUE));
+                break;
+            case MAGICIANS_RED:
+                list.add(DyeItem.byColor(DyeColor.ORANGE));
+                break;
+            case C_MOON:
+                list.add(DyeItem.byColor(DyeColor.GREEN));
+                break;
+            case WEATHER_REPORT:
+                list.add(DyeItem.byColor(DyeColor.WHITE));
+                break;
+            case ECHOS: list.add(DyeItem.byColor(DyeColor.LIME));
+                break;
+            case KILLER_QUEEN:
+                list.add(DyeItem.byColor(DyeColor.PINK));
+                break;
+            case KING_CRIMSON:
+                list.add(DyeItem.byColor(DyeColor.RED));
+                break;
+            case GREEN_DAY:
+                list.add(DyeItem.byColor(DyeColor.GREEN));
+                break;
+            default:
+                list.add(DyeItem.byColor(DyeColor.GRAY));
+        }
 
         return list;
     }
@@ -165,12 +190,11 @@ public class StandC2SPacket
                 .orElse(false);
     }
 
-    private int getStandID(ServerPlayer player)
+    private StandType getStandType(ServerPlayer player)
     {
-        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
-                .map(stand -> {
-                    return stand.getStandID();
-                })
+        int ID = player.getCapability(PlayerStandProvider.PLAYER_STAND)
+                .map(stand -> { return stand.getStandID(); })
                 .orElse(10);
+        return StandType.values()[ID];
     }
 }

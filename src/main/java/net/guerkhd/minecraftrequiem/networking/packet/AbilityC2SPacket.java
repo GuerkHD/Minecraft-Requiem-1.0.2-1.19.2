@@ -258,20 +258,6 @@ public class AbilityC2SPacket
         return true;
     }
 
-    private boolean isStandUser(ServerPlayer player)
-    {
-        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
-                .map(stand -> { return stand.getStandUser(); })
-                .orElse(false);
-    }
-
-    private boolean standIsActive(ServerPlayer player)
-    {
-        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
-                .map(stand -> { return stand.getStandActive(); })
-                .orElse(false);
-    }
-
     private StandType getStandType(ServerPlayer player)
     {
         int ID = player.getCapability(PlayerStandProvider.PLAYER_STAND)
@@ -311,7 +297,7 @@ public class AbilityC2SPacket
         return null;
     }
 
-    public int bomb(ServerLevel level, ServerPlayer player, int food, int cost)
+    private int bomb(ServerLevel level, ServerPlayer player, int food, int cost)
     {
         standSound(level, player, 7, true);
 
@@ -355,7 +341,7 @@ public class AbilityC2SPacket
         return cost;
     }
 
-    public void spawnHeartAttack(ServerLevel level, ServerPlayer player)
+    private void spawnHeartAttack(ServerLevel level, ServerPlayer player)
     {
         Turtle heartAttack = heartAttack(level, inFront(player));
         level.addFreshEntity(heartAttack);
@@ -367,7 +353,7 @@ public class AbilityC2SPacket
         });
     }
 
-    public Turtle heartAttack(ServerLevel level, Vec3 pos)
+    private Turtle heartAttack(ServerLevel level, Vec3 pos)
     {
         Turtle turtle = new Turtle(EntityType.TURTLE, level);
 
@@ -393,7 +379,7 @@ public class AbilityC2SPacket
         return pos;
     }
 
-    public void D4C(Level level, LivingEntity livingEntity)
+    private void D4C(Level level, LivingEntity livingEntity)
     {
         if (!level.isClientSide)
         {

@@ -162,170 +162,47 @@ public class ModEvents
     @SubscribeEvent
     public static void onLivingHurt(LivingHurtEvent event)
     {
-        if(event.getSource().getEntity() instanceof LivingEntity livingEntity && isGuerkItem(livingEntity.getMainHandItem().getItem()))
+        LivingEntity entity = event.getEntity();
+        Entity source = event.getSource().getEntity();
+        float amount = event.getAmount();
+
+        if(source instanceof LivingEntity livingSource && isGuerkItem(livingSource.getMainHandItem().getItem()))
         {
-            foodLeech(livingEntity, event.getEntity(), 1);
+            foodLeech(livingSource, entity, 1);
         }
 
-        if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() >= MinecraftRequiemCommonConfig.ECHOS_ACT_3_COST.get() && !isStand(event.getEntity()))
-        {
-            event.getEntity().addEffect(new MobEffectInstance(ModEffects.THREE_FREEZE.get(), 20, 0, false, false, true));
-            if(player.gameMode.isSurvival()) player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - MinecraftRequiemCommonConfig.ECHOS_ACT_3_COST.get());
-            event.getEntity().getLevel().playSound(null
-                    , player.getOnPos()
-                    , ModSounds.THREE_FREEZE.get()
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
-        }
-        else if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() < MinecraftRequiemCommonConfig.ECHOS_ACT_3_COST.get() && !isStand(event.getEntity()))
-        {
-            event.getEntity().getLevel().playSound(null
-                    , player.getOnPos()
-                    , SoundEvents.PLAYER_BURP
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
-        }
+        threeFreeze(entity, source);
 
-        //Player List
-        if(event.getEntity() instanceof Player player && getStandID(player) == 6 && standIsActive(player))
-        {
-            List<LivingEntity> list = event.getEntity().getLevel().getEntitiesOfClass(LivingEntity.class, event.getEntity().getBoundingBox().inflate(20));
-            list.remove(event.getEntity());
+        reflectDmg(entity, amount);
 
-            if(!list.isEmpty()) getClosest(list, event.getEntity()).hurt(DamageSource.MAGIC, event.getAmount());
-        }
+        applyBomb(entity, source);
 
-        if(event.getSource().getEntity() instanceof ServerPlayer player && getStandID(player) == 7 && standIsActive(player) && !getBomb(player) && !isStand(event.getEntity()))
-        {
-            event.getEntity().addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 36000, 0, false, false, true));
-
-            player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
-            {
-                stand.setBomb(true);
-                ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
-            });
-        }
-
-        if(event.getSource().getEntity() instanceof LivingEntity entity && event.getEntity() instanceof ServerPlayer player && player.hasEffect(ModEffects.EPITAPH.get()))
-        {
-            player.setXRot(entity.getXRot());
-            player.setYRot(entity.getYRot());
-            player.moveTo(behindTP(entity, player, 0));
-            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 40, 1, false, false, false));
-            event.setCanceled(true);
-            if(player.hasEffect(ModEffects.EPITAPH.get())) player.removeEffect(ModEffects.EPITAPH.get());
-
-            event.getEntity().getLevel().playSound(null
-                    , player.getOnPos()
-                    , ModSounds.KING_CRIMSON.get()
-                    , SoundSource.PLAYERS
-                    , 1f
-                    , event.getEntity().getLevel().random.nextFloat() * 0.1f + 0.9f);
-        }
+        timeSkip(entity, source, event);
     }
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event)
     {
-        if(getStandID(event.player) == 5 && standIsActive(event.player))
-        {
-            List<LivingEntity> list3F = event.player.getLevel().getEntitiesOfClass(LivingEntity.class, event.player.getBoundingBox().inflate(5));
-            list3F.remove(event.player);
+        Player player = event.player;
 
-            for(LivingEntity ent : list3F)
-            {
-                if(ent.hasEffect(ModEffects.THREE_FREEZE.get()))
-                {
-                    //Vec3 pos = event.player.getPosition(1f);
-                    ent.addEffect(new MobEffectInstance(ModEffects.THREE_FREEZE.get(), 20, 0, false, false, true));
-                    //event.player.getLevel().addParticle(ParticleTypes.LAVA, pos.x, pos.y, pos.z, 0, 0.7, 0);
-                }
-            }
-        }
+        refreshThreeFreeze(player);
 
-        if(event.player.hasEffect(ModEffects.GREEN_DAY.get()))
-        {
-            double down = getMaxY(event.player) - event.player.getY();
-            int duration = event.player.getEffect(ModEffects.GREEN_DAY.get()).getDuration();
+        greenDay(player);
 
-            if(down > 0 && down <= 5)
-            {
-                event.player.removeEffect(ModEffects.GREEN_DAY.get());
-                event.player.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), duration, (int) Math.round(down), true, true, true));
-            }
-            else if(down > 0 && down > 5)
-            {
-                event.player.removeEffect(ModEffects.GREEN_DAY.get());
-                event.player.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), duration, 5, true, true, true));
-            }
-            else if(down <= 0)
-            {
-                event.player.removeEffect(ModEffects.GREEN_DAY.get());
-                event.player.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), duration, 0, true, true, true));
-            }
-        }
-
-        //Player List
-        if(getStandID(event.player) == 6 && standIsActive(event.player))
-        {
-            List<LivingEntity> listHTH = event.player.getLevel().getEntitiesOfClass(LivingEntity.class, event.player.getBoundingBox().inflate(20));
-            listHTH.remove(event.player);
-
-            if(!listHTH.isEmpty()) getClosest(listHTH, event.player).addEffect(new MobEffectInstance(MobEffects.GLOWING, 10, 0, false, false));
-        }
+        glowClosest(player);
     }
 
     @SubscribeEvent
     public static void onLivingTick(LivingEvent.LivingTickEvent event)
     {
+        LivingEntity entity = event.getEntity();
         List<Player> list = event.getEntity().getLevel().getEntitiesOfClass(Player.class, event.getEntity().getBoundingBox().inflate(50));
         boolean bomb = false;
         boolean user = false;
 
-        for(Player player : list)
-        {
-            if(getBomb(player)) bomb = true;
-        }
-        if(!bomb)
-        {
-            //event.getEntity().removeEffect(MobEffects.GLOWING);
-            event.getEntity().removeEffect(ModEffects.BOMB.get());
-            if(event.getEntity() instanceof Turtle turtle && turtle.hasCustomName() && turtle.getCustomName().getString().equals("Sheer Heart Attack"))
-            {
-                turtle.remove(Entity.RemovalReason.DISCARDED);
-            }
-        }
+        removeBomb(entity, list, bomb);
 
-        if(isStand(event.getEntity()))
-        {
-            event.getEntity().clearFire();
-
-            for(Player player : list)
-            {
-                if(event.getEntity().getCustomName().equals(player.getName()))
-                {
-                    user = true;
-
-                    Vec3 vec3 = event.getEntity().getPosition(1f);
-
-                    event.getEntity().move(MoverType.SELF, behindMove(player, event.getEntity(), 0.5));
-                    //if(getStandID(player) == 1 || getStandID(player) == 2 || getStandID(player) == 4) event.getEntity().getLevel().addParticle(getParticle(player), vec3.x, vec3.y + player.getEyeHeight(), vec3.z, 0, 0.7, 0);
-
-                    //player.sendSystemMessage(Component.literal("Stand move: " + behindMove(player, event.getEntity(), 0.5)));
-
-                    if(tick == 0)
-                    {
-                        event.getEntity().setYRot(player.getYRot());
-                        event.getEntity().setXRot(player.getXRot());
-                        //x = random() / 2;
-                        //z = random() / 2;
-                    }
-                }
-            }
-            if(!user) event.getEntity().remove(Entity.RemovalReason.DISCARDED);
-        }
+        moveStand(entity, list, user);
 
         tick++;
         if(tick >= 20) tick = 0;
@@ -360,9 +237,173 @@ public class ModEvents
         return ClientStandData.getMaxY();
     }
 
-    private static double random()
+    private static void moveStand(LivingEntity entity, List<Player> list, boolean user)
     {
-        return RandomSource.createNewThreadLocalInstance().nextDouble();
+        if(isStand(entity))
+        {
+            entity.clearFire();
+
+            for(Player player : list)
+            {
+                if(entity.getCustomName().equals(player.getName()))
+                {
+                    user = true;
+
+                    entity.move(MoverType.SELF, behindMove(player, entity, 0.5));
+
+                    if(tick == 0)
+                    {
+                        entity.setYRot(player.getYRot());
+                        entity.setXRot(player.getXRot());
+                        //x = random() / 2;
+                        //z = random() / 2;
+                    }
+                }
+            }
+            if(!user) entity.remove(Entity.RemovalReason.DISCARDED);
+        }
+    }
+
+    private static void removeBomb(LivingEntity entity, List<Player> list, boolean bomb)
+    {
+        for(Player player : list)
+        {
+            if(getBomb(player)) bomb = true;
+        }
+        if(!bomb)
+        {
+            entity.removeEffect(ModEffects.BOMB.get());
+            if(entity instanceof Turtle turtle && turtle.hasCustomName() && turtle.getCustomName().getString().equals("Sheer Heart Attack"))
+            {
+                turtle.remove(Entity.RemovalReason.DISCARDED);
+            }
+        }
+    }
+
+    private static void greenDay(Player player)
+    {
+        if(player.hasEffect(ModEffects.GREEN_DAY.get()))
+        {
+            double down = getMaxY(player) - player.getY();
+            int duration = player.getEffect(ModEffects.GREEN_DAY.get()).getDuration();
+
+            if(down > 0 && down <= 5)
+            {
+                player.removeEffect(ModEffects.GREEN_DAY.get());
+                player.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), duration, (int) Math.round(down), true, true, true));
+            }
+            else if(down > 0 && down > 5)
+            {
+                player.removeEffect(ModEffects.GREEN_DAY.get());
+                player.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), duration, 5, true, true, true));
+            }
+            else if(down <= 0)
+            {
+                player.removeEffect(ModEffects.GREEN_DAY.get());
+                player.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), duration, 0, true, true, true));
+            }
+        }
+    }
+
+    private static void threeFreeze(LivingEntity entity, Entity source)
+    {
+        if(source instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() >= MinecraftRequiemCommonConfig.ECHOS_ACT_3_COST.get() && !isStand(entity))
+        {
+            entity.addEffect(new MobEffectInstance(ModEffects.THREE_FREEZE.get(), 20, 0, false, false, true));
+            if(player.gameMode.isSurvival()) player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - MinecraftRequiemCommonConfig.ECHOS_ACT_3_COST.get());
+            entity.getLevel().playSound(null
+                    , player.getOnPos()
+                    , ModSounds.THREE_FREEZE.get()
+                    , SoundSource.PLAYERS
+                    , 1f
+                    , entity.getLevel().random.nextFloat() * 0.1f + 0.9f);
+        }
+        else if(source instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() < MinecraftRequiemCommonConfig.ECHOS_ACT_3_COST.get() && !isStand(entity))
+        {
+            entity.getLevel().playSound(null
+                    , player.getOnPos()
+                    , SoundEvents.PLAYER_BURP
+                    , SoundSource.PLAYERS
+                    , 1f
+                    , entity.getLevel().random.nextFloat() * 0.1f + 0.9f);
+        }
+    }
+
+    private static void refreshThreeFreeze(Player player)
+    {
+        if(getStandID(player) == 5 && standIsActive(player))
+        {
+            List<LivingEntity> list = player.getLevel().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(5));
+            list.remove(player);
+
+            for(LivingEntity ent : list)
+            {
+                if(ent.hasEffect(ModEffects.THREE_FREEZE.get()))
+                {
+                    //Vec3 pos = event.player.getPosition(1f);
+                    ent.addEffect(new MobEffectInstance(ModEffects.THREE_FREEZE.get(), 20, 0, false, false, true));
+                    //event.player.getLevel().addParticle(ParticleTypes.LAVA, pos.x, pos.y, pos.z, 0, 0.7, 0);
+                }
+            }
+        }
+    }
+
+    private static void reflectDmg(LivingEntity entity, float amount)
+    {
+        //Player List
+        if(entity instanceof Player player && getStandID(player) == 6 && standIsActive(player))
+        {
+            List<LivingEntity> list = entity.getLevel().getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(20));
+            list.remove(entity);
+
+            if(!list.isEmpty()) getClosest(list, entity).hurt(DamageSource.MAGIC, amount);
+        }
+    }
+
+    private static void glowClosest(Player player)
+    {
+        //Player List
+        if(getStandID(player) == 6 && standIsActive(player))
+        {
+            List<LivingEntity> list = player.getLevel().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(20));
+            list.remove(player);
+
+            if(!list.isEmpty()) getClosest(list, player).addEffect(new MobEffectInstance(MobEffects.GLOWING, 10, 0, false, false));
+        }
+    }
+
+    private static void applyBomb(LivingEntity entity, Entity source)
+    {
+        if(source instanceof ServerPlayer player && getStandID(player) == 7 && standIsActive(player) && !getBomb(player) && !isStand(entity))
+        {
+            entity.addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 36000, 0, false, false, true));
+
+            player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
+            {
+                stand.setBomb(true);
+                ModMessages.sendToPlayer(new StandBombDataSyncS2CPacket(stand.getBomb()), player);
+            });
+        }
+    }
+
+    private static void timeSkip(LivingEntity target, Entity source, LivingHurtEvent event)
+    {
+        if(source instanceof LivingEntity entity && target instanceof ServerPlayer player && player.hasEffect(ModEffects.EPITAPH.get()))
+        {
+            player.setXRot(entity.getXRot());
+            player.setYRot(entity.getYRot());
+            player.moveTo(behindTP(entity, player, 0));
+            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 40, 1, false, false, false));
+            event.setCanceled(true);
+            if(player.hasEffect(ModEffects.EPITAPH.get())) player.removeEffect(ModEffects.EPITAPH.get());
+
+            target.getLevel().playSound(null
+                    , player.getOnPos()
+                    , ModSounds.KING_CRIMSON.get()
+                    , SoundSource.PLAYERS
+                    , 1f
+                    , target.getLevel().random.nextFloat() * 0.1f + 0.9f);
+        }
     }
 
     private static boolean isGuerkItem(Item item)
@@ -436,21 +477,5 @@ public class ModEvents
         }
 
         return closest;
-    }
-
-    private static double distance(LivingEntity entity, LivingEntity player)
-    {
-        return player.position().distanceToSqr(entity.position());
-    }
-
-    private static ParticleOptions getParticle(Player player)
-    {
-        ParticleOptions particle = null;
-
-        if(getStandID(player) == 1) particle = ParticleTypes.REVERSE_PORTAL;
-        else if(getStandID(player) == 2) particle = ParticleTypes.LAVA;
-        else if(getStandID(player) == 4) particle = ParticleTypes.CLOUD;
-
-        return particle;
     }
 }

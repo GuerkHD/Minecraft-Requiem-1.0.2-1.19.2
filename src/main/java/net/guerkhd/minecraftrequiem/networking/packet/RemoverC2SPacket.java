@@ -19,20 +19,11 @@ import java.util.function.Supplier;
 
 public class RemoverC2SPacket
 {
-    public RemoverC2SPacket()
-    {
+    public RemoverC2SPacket() {    }
 
-    }
+    public RemoverC2SPacket(FriendlyByteBuf buf) {    }
 
-    public RemoverC2SPacket(FriendlyByteBuf buf)
-    {
-
-    }
-
-    public void toBytes(FriendlyByteBuf buf)
-    {
-
-    }
+    public void toBytes(FriendlyByteBuf buf) {    }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier)
     {
@@ -78,13 +69,6 @@ public class RemoverC2SPacket
     {
         return player.getCapability(PlayerStandProvider.PLAYER_STAND)
                 .map(stand -> { return stand.getStandUser(); })
-                .orElse(false);
-    }
-
-    private boolean standIsActive(ServerPlayer player)
-    {
-        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
-                .map(stand -> { return stand.getStandActive(); })
                 .orElse(false);
     }
 }

@@ -2,6 +2,7 @@ package net.guerkhd.minecraftrequiem.event;
 
 import net.guerkhd.minecraftrequiem.MinecraftRequiem;
 import net.guerkhd.minecraftrequiem.client.ClientStandData;
+import net.guerkhd.minecraftrequiem.client.StandHudOverlay;
 import net.guerkhd.minecraftrequiem.effect.ModEffects;
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.networking.packet.AbilityC2SPacket;
@@ -25,6 +26,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
@@ -83,6 +85,12 @@ public class ClientEvents
         {
             event.register(KeyBinding.SUMMONING_KEY);
             event.register(KeyBinding.ABILITY_KEY);
+        }
+
+        @SubscribeEvent
+        public static void registerGuiOverlays(RegisterGuiOverlaysEvent event)
+        {
+            event.registerAboveAll("stand", StandHudOverlay.STAND_HUD);
         }
     }
 }

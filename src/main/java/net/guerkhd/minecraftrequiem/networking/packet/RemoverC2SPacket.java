@@ -11,7 +11,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.List;
@@ -46,15 +48,16 @@ public class RemoverC2SPacket
                 {
                     if(stand.getStandActive())
                     {
-                        List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(20));
-                        for(LivingEntity ent : list)
-                        {
-                            if(stand.getStandID() == 5 && ent.hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) ent.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
-                        }
                         if(stand.getStandID() == 2) player.removeEffect(MobEffects.FIRE_RESISTANCE);
                         if(stand.getStandID() == 4 && (level.isThundering() || level.isRaining())) level.setWeatherParameters(0, 0, false, false);
                         stand.deactivateStand();
                         ModMessages.sendToPlayer(new StandActiveDataSyncS2CPacket(stand.getStandActive()), player);
+
+                        List<Zombie> list = level.getEntitiesOfClass(Zombie.class, player.getBoundingBox().inflate(50));
+                        for(Zombie zombie : list)
+                        {
+                            if(isStand(zombie) && zombie.getCustomName().equals(player.getName())) zombie.remove(Entity.RemovalReason.DISCARDED);
+                        }
                     }
                     stand.undoStandUser();
                     ModMessages.sendToPlayer(new StandUserDataSyncS2CPacket(stand.getStandUser()), player);
@@ -70,5 +73,11 @@ public class RemoverC2SPacket
         return player.getCapability(PlayerStandProvider.PLAYER_STAND)
                 .map(stand -> { return stand.getStandUser(); })
                 .orElse(false);
+    }
+
+    private boolean isStand(LivingEntity entity)
+    {
+        if(entity instanceof Zombie stand && stand.hasCustomName() && stand.hasEffect(MobEffects.INVISIBILITY) && stand.isNoAi()) return true;
+        else return false;
     }
 }

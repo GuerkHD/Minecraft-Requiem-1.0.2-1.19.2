@@ -18,24 +18,27 @@ public class StandHudOverlay
         double scale = window.getGuiScale();
         float scaledScale = (float) (scale * 0.4);
 
-        poseStack.pushPose();
-        poseStack.scale(scaledScale, scaledScale, scaledScale);
+        //poseStack.pushPose();
+        //poseStack.scale(scaledScale, scaledScale, scaledScale);
 
         //int scaledWidth = (int) (screenWidth / scale);
         //int scaledHeight = (int) (screenHeight / scale);
-        int x = (int) (screenWidth * 0.2);
-        int y = (int) (screenHeight * 0.2);
-
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        int x = (int) (window.getGuiScaledWidth() / 30);
+        int y = (int) (window.getGuiScaledHeight() / 18);
 
         Font font = mc.font;
 
         if(standIsActive())
         {
             font.draw(poseStack, getComponent(getStandType()), x, y, 0);
+
+            //font.draw(poseStack, "TEST1", (float) (window.getGuiScaledWidth() * 0.25), (float) (window.getGuiScaledHeight() * 0.25), 0);
+            //font.draw(poseStack, "TEST2", (float) (window.getGuiScaledWidth() * 0.25), (float) (window.getGuiScaledHeight() * 0.75), 0);
+            //font.draw(poseStack, "TEST3", (float) (window.getGuiScaledWidth() * 0.75), (float) (window.getGuiScaledHeight() * 0.75), 0);
+            //font.draw(poseStack, "TEST4", (float) (window.getGuiScaledWidth() * 0.75), (float) (window.getGuiScaledHeight() * 0.25), 0);
         }
 
-        poseStack.popPose();
+        //poseStack.popPose();
     }));
 
     public enum StandType

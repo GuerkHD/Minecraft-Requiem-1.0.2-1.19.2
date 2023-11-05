@@ -123,7 +123,7 @@ public class ModEvents
     @SubscribeEvent
     public static void onLeaveLevel(EntityLeaveLevelEvent event)
     {
-        if(event.getEntity() instanceof Player player && standIsActive())
+        if(event.getEntity() instanceof Player player && standIsActive(player))
         {
             ModMessages.sendToServer(new StandC2SPacket());
         }
@@ -196,13 +196,12 @@ public class ModEvents
     public static void onLivingTick(LivingEvent.LivingTickEvent event)
     {
         LivingEntity entity = event.getEntity();
-        List<Player> list = event.getEntity().getLevel().getEntitiesOfClass(Player.class, event.getEntity().getBoundingBox().inflate(50));
-        boolean bomb = false;
+
         boolean user = false;
 
-        removeBomb(entity, list, bomb);
+        refreshBomb(entity);
 
-        moveStand(entity, list, user);
+        moveStand(entity, user);
 
         tick++;
         if(tick >= 20) tick = 0;
@@ -217,19 +216,25 @@ public class ModEvents
         }
     }
 
-    private static int getStandID()
+    private static int getStandID(Player player)
     {
-        return ClientStandData.getStandID();
+        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
+                .map(PlayerStand::getStandID)
+                .orElse(10);
     }
 
-    private static boolean standIsActive()
+    private static boolean standIsActive(Player player)
     {
-        return ClientStandData.getStandActive();
+        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
+                .map(PlayerStand::getStandActive)
+                .orElse(false);
     }
 
-    private static boolean getBomb()
+    private static boolean getBomb(Player player)
     {
-        return ClientStandData.getBomb();
+        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
+                .map(PlayerStand::getBomb)
+                .orElse(false);
     }
 
     private static double getMaxY()
@@ -237,10 +242,11 @@ public class ModEvents
         return ClientStandData.getMaxY();
     }
 
-    private static void moveStand(LivingEntity entity, List<Player> list, boolean user)
+    private static void moveStand(LivingEntity entity, boolean user)
     {
         if(isStand(entity))
         {
+            List<Player> list = entity.getLevel().getEntitiesOfClass(Player.class, entity.getBoundingBox().inflate(50));
             entity.clearFire();
 
             for(Player player : list)
@@ -264,19 +270,21 @@ public class ModEvents
         }
     }
 
-    private static void removeBomb(LivingEntity entity, List<Player> list, boolean bomb)
+    private static void refreshBomb(LivingEntity entity)
     {
-        for(Player player : list)
+        if(entity.hasEffect(ModEffects.BOMB.get()))
         {
-            if(getBomb()) bomb = true;
-        }
-        if(!bomb)
-        {
-            entity.removeEffect(ModEffects.BOMB.get());
-            if(entity instanceof Turtle turtle && turtle.hasCustomName() && turtle.getCustomName().getString().equals("Sheer Heart Attack"))
+            List<Player> list = entity.getLevel().getEntitiesOfClass(Player.class, entity.getBoundingBox().inflate(50));
+
+            for(Player player : list)
             {
-                turtle.remove(Entity.RemovalReason.DISCARDED);
+                if(getBomb(player)) entity.addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 20, 0, false, false, true));
             }
+        }
+
+        if(entity instanceof Turtle turtle && turtle.hasCustomName() && turtle.getCustomName().getString().equals("Sheer Heart Attack") && !turtle.hasEffect(ModEffects.BOMB.get()))
+        {
+            turtle.remove(Entity.RemovalReason.DISCARDED);
         }
     }
 
@@ -307,7 +315,7 @@ public class ModEvents
 
     private static void threeFreeze(LivingEntity entity, Entity source)
     {
-        if(source instanceof ServerPlayer player && getStandID() == 5 && standIsActive() && player.getFoodData().getFoodLevel() >= MinecraftRequiemCommonConfig.ECHOS_ACT_3_COST.get() && !isStand(entity))
+        if(source instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() >= MinecraftRequiemCommonConfig.ECHOS_ACT_3_COST.get() && !isStand(entity))
         {
             entity.addEffect(new MobEffectInstance(ModEffects.THREE_FREEZE.get(), 20, 0, false, false, true));
             if(player.gameMode.isSurvival()) player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - MinecraftRequiemCommonConfig.ECHOS_ACT_3_COST.get());
@@ -318,7 +326,7 @@ public class ModEvents
                     , 1f
                     , entity.getLevel().random.nextFloat() * 0.1f + 0.9f);
         }
-        else if(source instanceof ServerPlayer player && getStandID() == 5 && standIsActive() && player.getFoodData().getFoodLevel() < MinecraftRequiemCommonConfig.ECHOS_ACT_3_COST.get() && !isStand(entity))
+        else if(source instanceof ServerPlayer player && getStandID(player) == 5 && standIsActive(player) && player.getFoodData().getFoodLevel() < MinecraftRequiemCommonConfig.ECHOS_ACT_3_COST.get() && !isStand(entity))
         {
             entity.getLevel().playSound(null
                     , player.getOnPos()
@@ -331,7 +339,7 @@ public class ModEvents
 
     private static void refreshThreeFreeze(Player player)
     {
-        if(getStandID() == 5 && standIsActive())
+        if(getStandID(player) == 5 && standIsActive(player))
         {
             List<LivingEntity> list = player.getLevel().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(5));
             list.remove(player);
@@ -351,7 +359,7 @@ public class ModEvents
     private static void reflectDmg(LivingEntity entity, float amount)
     {
         //Player List
-        if(entity instanceof Player player && getStandID() == 6 && standIsActive())
+        if(entity instanceof Player player && getStandID(player) == 6 && standIsActive(player))
         {
             List<LivingEntity> list = entity.getLevel().getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(20));
             list.remove(entity);
@@ -363,7 +371,7 @@ public class ModEvents
     private static void glowClosest(Player player)
     {
         //Player List
-        if(getStandID() == 6 && standIsActive())
+        if(getStandID(player) == 6 && standIsActive(player))
         {
             List<LivingEntity> list = player.getLevel().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(20));
             list.remove(player);
@@ -374,9 +382,9 @@ public class ModEvents
 
     private static void applyBomb(LivingEntity entity, Entity source)
     {
-        if(source instanceof ServerPlayer player && getStandID() == 7 && standIsActive() && !getBomb() && !isStand(entity))
+        if(source instanceof ServerPlayer player && getStandID(player) == 7 && standIsActive(player) && !getBomb(player) && !isStand(entity))
         {
-            entity.addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 36000, 0, false, false, true));
+            entity.addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 20, 0, false, false, true));
 
             player.getCapability(PlayerStandProvider.PLAYER_STAND).ifPresent(stand ->
             {

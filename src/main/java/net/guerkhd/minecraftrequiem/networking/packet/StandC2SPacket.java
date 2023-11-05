@@ -93,6 +93,13 @@ public class StandC2SPacket
                     stand.deactivateStand();
                     ModMessages.sendToPlayer(new StandActiveDataSyncS2CPacket(stand.getStandActive()), player);
                 });
+
+                List<Zombie> list = level.getEntitiesOfClass(Zombie.class, player.getBoundingBox().inflate(50));
+
+                for(Zombie stand : list)
+                {
+                    if(isStand(stand) && stand.getCustomName().equals(player.getName())) stand.remove(Entity.RemovalReason.DISCARDED);
+                }
             }
             else player.sendSystemMessage(Component.literal("Skill issue."));
         });
@@ -196,5 +203,11 @@ public class StandC2SPacket
                 .map(stand -> { return stand.getStandID(); })
                 .orElse(10);
         return StandType.values()[ID];
+    }
+
+    private boolean isStand(LivingEntity entity)
+    {
+        if(entity instanceof Zombie stand && stand.hasCustomName() && stand.hasEffect(MobEffects.INVISIBILITY) && stand.isNoAi()) return true;
+        else return false;
     }
 }

@@ -16,6 +16,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -60,19 +61,6 @@ public class ClientEvents
             {
                 Vec3 motion = event.player.getDeltaMovement();
                 event.player.setDeltaMovement(motion.x, 0.2, motion.z);
-            }
-
-            List<Zombie> list = event.player.getLevel().getEntitiesOfClass(Zombie.class, event.player.getBoundingBox().inflate(50));
-
-            for(Zombie stand : list)
-            {
-                if(stand.hasCustomName())
-                {
-                    if(stand.getCustomName().equals(event.player.getName()) && !ClientStandData.getStandActive())
-                    {
-                        stand.remove(Entity.RemovalReason.DISCARDED);
-                    }
-                }
             }
         }
     }

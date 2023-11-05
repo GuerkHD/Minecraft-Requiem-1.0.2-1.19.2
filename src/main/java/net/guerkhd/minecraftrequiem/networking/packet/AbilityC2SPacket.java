@@ -24,6 +24,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Fox;
 import net.minecraft.world.entity.animal.Turtle;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
@@ -244,6 +245,9 @@ public class AbilityC2SPacket
                             play.addEffect(new MobEffectInstance(ModEffects.GREEN_DAY.get(), 500, 0, false, false, true));
                         }
 
+                        List<Monster> mobList = level.getEntitiesOfClass(Monster.class, player.getBoundingBox().inflate(15));
+                        for(Monster mob : mobList) mob.addEffect(new MobEffectInstance(MobEffects.POISON, 500, 0));
+
                         standSound(level, player, 9, true);
                     }
                     else
@@ -359,7 +363,7 @@ public class AbilityC2SPacket
 
         turtle.setPos(pos);
         turtle.setBaby(true);
-        turtle.addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 3600, 0, false, false));
+        turtle.addEffect(new MobEffectInstance(ModEffects.BOMB.get(), 20, 0, false, false));
         turtle.setInvulnerable(true);
         turtle.setSilent(true);
         turtle.setNoAi(true);

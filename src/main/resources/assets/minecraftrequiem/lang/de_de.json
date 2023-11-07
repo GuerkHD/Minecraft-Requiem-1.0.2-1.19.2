@@ -1,0 +1,46 @@
+{
+  "item.minecraftrequiem.guerk_ingot": "Guerkbarren",
+  "item.minecraftrequiem.raw_guerk": "Rohguerk",
+  "item.minecraftrequiem.stand_arrow": "Standpfeil",
+  "item.minecraftrequiem.requiem_arrow": "Requiem-Pfeil",
+  "item.minecraftrequiem.stand_arrow_tip": "Stand Pfeilspitze",
+  "item.minecraftrequiem.requiem_arrow_tip": "Requiem Pfeilspitze",
+  "item.minecraftrequiem.remover_arrow": "Stand Entferner Pfeil",
+
+  "item.minecraftrequiem.guerk_sword": "Guerk Schwert",
+  "item.minecraftrequiem.guerk_pickaxe": "Guerk Spitzhacke",
+  "item.minecraftrequiem.guerk_axe": "Guerk Axt",
+  "item.minecraftrequiem.guerk_shovel": "Guerk Schaufel",
+  "item.minecraftrequiem.guerk_hoe": "Guerk Hacke",
+
+  "block.minecraftrequiem.guerk_block": "Guerkblock",
+  "block.minecraftrequiem.guerk_ore": "Guerkerz",
+  "block.minecraftrequiem.deepslate_guerk_ore": "Tiefenschiefer-Guerkerz",
+  "block.minecraftrequiem.edible_gold_block": "Essbarer Goldblock",
+  "block.minecraftrequiem.gold_infused_obsidian": "Gold Besetztes Obsidian",
+
+  "key.category.minecraftrequiem.stand": "Minecraft Requiem",
+  "key.minecraftrequiem.summon_stand": "Stand Rufen",
+  "key.minecraftrequiem.stand_ability": "Stand Fähigkeit",
+
+  "effect.minecraftrequiem.time_stop": "Angehaltene Zeit",
+  "effect.minecraftrequiem.bomb": "Bombe",
+  "effect.minecraftrequiem.epitaph": "Epitaph",
+  "effect.minecraftrequiem.green_day": "Green Day",
+  "effect.minecraftrequiem.three_freeze": "Three Freeze",
+  "effect.minecraftrequiem.constipation": "Verstopfungen",
+
+  "sounds.minecraftrequiem.three_freeze": "Three Freeze",
+  "sounds.minecraftrequiem.c_moon": "C-Moon",
+  "sounds.minecraftrequiem.killer_queen": "Killer Queen",
+  "sounds.minecraftrequiem.king_crimson": "King Crimson",
+  "sounds.minecraftrequiem.stand_summon": "Stand gerufen",
+  "sounds.minecraftrequiem.stand_unsummon": "Stand zurück gerufen",
+  "sounds.minecraftrequiem.za_warudo": "Za Warudo",
+  "sounds.minecraftrequiem.green_day": "Green Day",
+
+  "message.minecraftrequiem.stand_remover_messeage": "Stand entfernt.",
+  "message.minecraftrequiem.food_leech": " 1 Nahrungsentzug",
+
+  "itemGroup.minecraftrequiemtab": "Minecraft Requiem"
+}

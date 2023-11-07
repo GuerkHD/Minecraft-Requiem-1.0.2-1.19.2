@@ -136,7 +136,7 @@ public class ModEvents
 
         if(isGuerkItem(event.getItemStack().getItem()))
         {
-            tooltips.add(5, Component.literal(" 1 Food Leech").withStyle(ChatFormatting.DARK_GREEN));
+            tooltips.add(tooltips.size(), Component.translatable("message.minecraftrequiem.food_leech").withStyle(ChatFormatting.DARK_GREEN));
         }
     }
 

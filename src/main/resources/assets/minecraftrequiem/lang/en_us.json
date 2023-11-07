@@ -39,5 +39,8 @@
   "sounds.minecraftrequiem.za_warudo": "Za Warudo",
   "sounds.minecraftrequiem.green_day": "Green Day",
 
+  "message.minecraftrequiem.stand_remover_messeage": "Stand removed.",
+  "message.minecraftrequiem.food_leech": " 1 Food Leech",
+
   "itemGroup.minecraftrequiemtab": "Minecraft Requiem"
 }

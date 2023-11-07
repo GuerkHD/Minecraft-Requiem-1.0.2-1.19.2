@@ -61,7 +61,7 @@ public class RemoverC2SPacket
                     }
                     stand.undoStandUser();
                     ModMessages.sendToPlayer(new StandUserDataSyncS2CPacket(stand.getStandUser()), player);
-                    player.sendSystemMessage(Component.literal("Stand removed.").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+                    player.sendSystemMessage(Component.translatable("message.minecraftrequiem.stand_remover_messeage").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                 });
             }
         });

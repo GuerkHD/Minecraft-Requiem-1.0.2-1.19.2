@@ -1,6 +1,5 @@
 package net.guerkhd.minecraftrequiem.effect;
 
-import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;

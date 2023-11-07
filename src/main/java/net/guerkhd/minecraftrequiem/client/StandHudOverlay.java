@@ -1,11 +1,9 @@
 package net.guerkhd.minecraftrequiem.client;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
@@ -15,14 +13,7 @@ public class StandHudOverlay
     {
         Minecraft mc = Minecraft.getInstance();
         Window window = mc.getWindow();
-        double scale = window.getGuiScale();
-        float scaledScale = (float) (scale * 0.4);
 
-        //poseStack.pushPose();
-        //poseStack.scale(scaledScale, scaledScale, scaledScale);
-
-        //int scaledWidth = (int) (screenWidth / scale);
-        //int scaledHeight = (int) (screenHeight / scale);
         int x = (int) (window.getGuiScaledWidth() / 30);
         int y = (int) (window.getGuiScaledHeight() / 18);
 
@@ -37,8 +28,6 @@ public class StandHudOverlay
             //font.draw(poseStack, "TEST3", (float) (window.getGuiScaledWidth() * 0.75), (float) (window.getGuiScaledHeight() * 0.75), 0);
             //font.draw(poseStack, "TEST4", (float) (window.getGuiScaledWidth() * 0.75), (float) (window.getGuiScaledHeight() * 0.25), 0);
         }
-
-        //poseStack.popPose();
     }));
 
     public enum StandType

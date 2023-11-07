@@ -1,7 +1,6 @@
 package net.guerkhd.minecraftrequiem.stand;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.monster.Zombie;
 
 public class PlayerStand
 {

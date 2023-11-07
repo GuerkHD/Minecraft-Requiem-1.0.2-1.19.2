@@ -136,7 +136,7 @@ public class ModEvents
 
         if(isGuerkItem(event.getItemStack().getItem()))
         {
-            tooltips.add(tooltips.size(), Component.translatable("message.minecraftrequiem.food_leech").withStyle(ChatFormatting.DARK_GREEN));
+            tooltips.add(getIntex(tooltips.size()), Component.translatable("message.minecraftrequiem.food_leech").withStyle(ChatFormatting.DARK_GREEN));
         }
     }
 
@@ -485,5 +485,11 @@ public class ModEvents
         }
 
         return closest;
+    }
+
+    private static int getIntex(int size)
+    {
+        if(size > 5) size = 5;
+        return size;
     }
 }

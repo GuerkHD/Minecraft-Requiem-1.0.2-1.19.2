@@ -221,7 +221,7 @@ public class AbilityC2SPacket
                     if(food >= cost)
                     {
                         List<ServerPlayer> list = level.getEntitiesOfClass(ServerPlayer.class, player.getBoundingBox().inflate(15));
-                        list.remove(player);
+                        //list.remove(player);
 
                         for(ServerPlayer play : list)
                         {

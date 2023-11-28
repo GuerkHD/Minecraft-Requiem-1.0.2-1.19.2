@@ -18,13 +18,13 @@ public class RequiemArrowItem extends Item
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-
-        if(!level.isClientSide && hand == InteractionHand.MAIN_HAND && !ClientStandData.getStandUser())
-        {
-            ModMessages.sendToServer(new ArrowC2SPacket());
-            player.getCooldowns().addCooldown(this, 20);
-        }
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+    {
+        //if(!level.isClientSide && hand == InteractionHand.MAIN_HAND && !ClientStandData.getStandUser())
+        //{
+        //    ModMessages.sendToServer(new ArrowC2SPacket());
+        //    player.getCooldowns().addCooldown(this, 20);
+        //}
 
         return super.use(level, player, hand);
     }

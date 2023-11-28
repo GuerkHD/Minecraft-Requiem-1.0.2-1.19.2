@@ -4,6 +4,7 @@ import net.guerkhd.minecraftrequiem.MinecraftRequiem;
 import net.guerkhd.minecraftrequiem.client.ClientStandData;
 import net.guerkhd.minecraftrequiem.config.MinecraftRequiemCommonConfig;
 import net.guerkhd.minecraftrequiem.effect.ModEffects;
+import net.guerkhd.minecraftrequiem.item.Custom.StandArrowItem;
 import net.guerkhd.minecraftrequiem.item.ModItems;
 import net.guerkhd.minecraftrequiem.networking.ModMessages;
 import net.guerkhd.minecraftrequiem.networking.packet.*;
@@ -38,6 +39,7 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -196,6 +198,15 @@ public class ModEvents
         {
             event.setCanceled(true);
         }
+    }
+
+    @SubscribeEvent
+    public static void onItemUse(PlayerInteractEvent.RightClickItem event)
+    {
+        Item item = event.getItemStack().getItem();
+        Player player = event.getEntity();
+
+        if(!event.getLevel().isClientSide() && item instanceof StandArrowItem && player.experienceLevel < 30) player.hurt(DamageSource.MAGIC, Float.MAX_VALUE);
     }
 
     private static int getStandID(Player player)

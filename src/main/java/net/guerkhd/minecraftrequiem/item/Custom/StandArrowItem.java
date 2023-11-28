@@ -19,19 +19,19 @@ public class StandArrowItem extends Item
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+    {
+        //if(!level.isClientSide && hand == InteractionHand.MAIN_HAND && !ClientStandData.getStandUser())
+        //{
+        //    if(player.experienceLevel >= 30)
+        //    {
+        //        ModMessages.sendToServer(new ArrowC2SPacket());
+        //        player.giveExperiencePoints(-1395);
+        //    }
+        //    else player.hurt(DamageSource.MAGIC, Float.MAX_VALUE);
 
-        if(!level.isClientSide && hand == InteractionHand.MAIN_HAND && !ClientStandData.getStandUser())
-        {
-            if(player.experienceLevel >= 30)
-            {
-                ModMessages.sendToServer(new ArrowC2SPacket());
-                player.giveExperiencePoints(-1395);
-            }
-            else player.hurt(DamageSource.MAGIC, Float.MAX_VALUE);
-
-            player.getCooldowns().addCooldown(this, 20);
-        }
+        //    player.getCooldowns().addCooldown(this, 20);
+        //}
 
         return super.use(level, player, hand);
     }

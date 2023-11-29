@@ -105,15 +105,6 @@ public class ModEvents
     }
 
     @SubscribeEvent
-    public static void onLeaveLevel(EntityLeaveLevelEvent event)
-    {
-        if(event.getEntity() instanceof Player player && standIsActive(player))
-        {
-            ModMessages.sendToServer(new StandC2SPacket());
-        }
-    }
-
-    @SubscribeEvent
     public static void onTooltip(ItemTooltipEvent event)
     {
         List<Component> tooltips = event.getToolTip();
@@ -150,18 +141,18 @@ public class ModEvents
         Entity source = event.getSource().getEntity();
         float amount = event.getAmount();
 
-        if(source instanceof LivingEntity livingSource && isGuerkItem(livingSource.getMainHandItem().getItem()))
+        if(!entity.getLevel().isClientSide())
         {
-            foodLeech(livingSource, entity, 1);
+            if(source instanceof LivingEntity livingSource && isGuerkItem(livingSource.getMainHandItem().getItem()))
+            {
+                foodLeech(livingSource, entity, 1);
+            }
+
+            threeFreeze(entity, source);
+            reflectDmg(entity, amount);
+            applyBomb(entity, source);
+            timeSkip(entity, source, event);
         }
-
-        threeFreeze(entity, source);
-
-        reflectDmg(entity, amount);
-
-        applyBomb(entity, source);
-
-        timeSkip(entity, source, event);
     }
 
     @SubscribeEvent
@@ -184,9 +175,11 @@ public class ModEvents
 
         boolean user = false;
 
-        refreshBomb(entity);
-
-        moveStand(entity, user);
+        if(!event.getEntity().getLevel().isClientSide())
+        {
+            refreshBomb(entity);
+            moveStand(entity, user);
+        }
 
         tick++;
         if(tick >= 20) tick = 0;
@@ -358,9 +351,9 @@ public class ModEvents
         if(entity instanceof Player player && getStandID(player) == 6 && standIsActive(player))
         {
             List<LivingEntity> list = entity.getLevel().getEntitiesOfClass(LivingEntity.class, entity.getBoundingBox().inflate(20));
-            list.remove(entity);
+            list.remove(player);
 
-            if(!list.isEmpty()) getClosest(list, entity).hurt(DamageSource.MAGIC, amount);
+            if(!list.isEmpty()) getClosest(list, player).hurt(DamageSource.MAGIC, amount);
         }
     }
 

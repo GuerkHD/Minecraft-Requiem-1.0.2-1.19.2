@@ -132,7 +132,7 @@ public class ModEvents
         Level level = player.getLevel();
         Item item = event.getStack().getItem();
 
-        if(name.equals("Knorke75") && item.equals(Items.DIAMOND))
+        if(!level.isClientSide() && name.equals("Knorke75") && item.equals(Items.DIAMOND))
         {
             level.playSound(null
                     , player.getOnPos()
@@ -169,11 +169,12 @@ public class ModEvents
     {
         Player player = event.player;
 
-        refreshThreeFreeze(player);
-
-        greenDay(player);
-
-        glowClosest(player);
+        if(!player.getLevel().isClientSide())
+        {
+            refreshThreeFreeze(player);
+            greenDay(player);
+            glowClosest(player);
+        }
     }
 
     @SubscribeEvent
@@ -230,9 +231,11 @@ public class ModEvents
                 .orElse(false);
     }
 
-    private static double getMaxY()
+    private static double getMaxY(Player player)
     {
-        return ClientStandData.getMaxY();
+        return player.getCapability(PlayerStandProvider.PLAYER_STAND)
+                .map(PlayerStand::getMaxY)
+                .orElse(player.getY());
     }
 
     private static void moveStand(LivingEntity entity, boolean user)
@@ -285,7 +288,7 @@ public class ModEvents
     {
         if(player.hasEffect(ModEffects.GREEN_DAY.get()))
         {
-            double down = getMaxY() - player.getY();
+            double down = getMaxY(player) - player.getY();
             int duration = player.getEffect(ModEffects.GREEN_DAY.get()).getDuration();
 
             if(down > 0 && down <= 5)

@@ -175,7 +175,7 @@ public class ModEvents
 
         boolean user = false;
 
-        if(!event.getEntity().getLevel().isClientSide())
+        if(!entity.getLevel().isClientSide())
         {
             refreshBomb(entity);
             moveStand(entity, user);

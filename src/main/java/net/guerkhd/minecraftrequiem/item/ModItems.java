@@ -26,6 +26,10 @@ public class ModItems
             () -> new Item(new Item.Properties()
                     .food(Foods.RAW_GUERK)
                     .tab(ModCreativeModeTab.MINECRAFTREQUIEM_TAB)));
+    public static final RegistryObject<Item> GUERK_NUGGET = ITEMS.register("guerk_nugget",
+            () -> new Item(new Item.Properties()
+                    .food(Foods.GUERK_NUGGET)
+                    .tab(ModCreativeModeTab.MINECRAFTREQUIEM_TAB)));
 
     public static final RegistryObject<StandArrowItem> STAND_ARROW = ITEMS.register("stand_arrow",
             () -> new StandArrowItem(new Item.Properties()
@@ -80,6 +84,11 @@ public class ModItems
                 .saturationMod(0.6f)
                 .fast()
                 .effect(() -> new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 100, 0), 0.8f)
+                .build();
+        public static final FoodProperties GUERK_NUGGET = new FoodProperties.Builder()
+                .nutrition(1)
+                .saturationMod(0.3f)
+                .fast()
                 .build();
     }
 

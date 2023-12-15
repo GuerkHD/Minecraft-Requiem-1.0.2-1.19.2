@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "guerk_ingot",
+  "ingredients": [
+    {
+      "item": "minecraftrequiem:guerk_ingot"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "minecraftrequiem:guerk_nugget"
+  }
+}
